@@ -21,3 +21,9 @@ Homestead.yaml
 Homestead.json
 /.vagrant
 .phpunit.result.cache
+
+/storage/*.key
+npm-debug.log
+yarn-error.log
+/.idea
+/.vscode
