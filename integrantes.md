@@ -1,4 +1,4 @@
 Integrantes do grupo:
   #Igor Gregori Silva Carlos
-  #João Vitor Silva Flávio
-  
+  #Joï¿½o Vitor Silva Flï¿½vio
+  #Igor Gregori
