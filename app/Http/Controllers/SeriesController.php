@@ -13,7 +13,7 @@ class SeriesController extends Controller
      */
     public function index()
     {
-        return 'listar todas as séries';
+        return response('', 200);
     }
 
     /**
