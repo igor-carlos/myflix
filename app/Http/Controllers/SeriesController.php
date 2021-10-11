@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Serie;
+use Illuminate\Http\Response;
 
 class SeriesController extends Controller
 {
@@ -12,7 +13,7 @@ class SeriesController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(): Response
     {
         return response(Serie::all(), 200);
     }
