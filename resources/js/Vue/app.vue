@@ -1,56 +1,84 @@
-<template> 
+<template>
+  <div>
+    <ul>
+      <li>
+        <p class="myflix-logo" href="#home">
+          <span class="font-red">My</span>flix
+        </p>
+      </li>
+      <!-- <li style="float: right"><a class="active" href="#about">About</a></li> -->
+    </ul>
     <div class="series-container">
-        <div class="heading">
-        <h2 id="title">Séries</h2>
-        <!--- @todo botão do formulário ---> 
-        </div>
-        <list-view :series='series'/>
-    </div> 
+      <list-view :series="series" />
+    </div>
+  </div>
 </template>
-
 <script>
-import listView from './listView';
+import listView from "./listView";
 
 export default {
-    components: {
-        listView
+  components: {
+    listView,
+  },
+  data: function () {
+    return {
+      series: [],
+    };
+  },
+  methods: {
+    getSeries() {
+      axios
+        .get("api/v1/series")
+        .then((response) => {
+          this.series = response.data;
+          console.log(this.series);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     },
-    data: function() {
-        return {
-            series: [],
-        }
-    },
-    methods: {
-        getSeries() {
-            axios.get("api/v1/series")
-                .then(response => {
-                    this.series = response.data
-                    console.log(this.series)
-                })
-                .catch(error => {
-                console.log(error)
-                })
-        }
-    },
-    created() {
-        this.getSeries();
-    }
-}
+  },
+  created() {
+    this.getSeries();
+  },
+};
 </script>
 
-
 <style scoped>
-    .series-container {
-        width: 50%;
-        margin: auto;
-    }
+.series-container {
+  padding: 50px;
+}
 
-    .heading {
-        background: #e6e6e6;
-        padding: 10px;
-    }
+.myflix-logo {
+  font-family: "ZCOOL KuaiLe", cursive;
+  font-size: 48px;
+}
 
-    #title {
-        text-align: center;
-    }
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: #333;
+}
+
+li {
+  float: left;
+}
+
+li p {
+  display: block;
+  color: white;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+
+li a:hover {
+  background-color: #111;
+}
+
+.font-red {
+  color: rgb(185, 33, 33);
+}
 </style>

@@ -2076,6 +2076,11 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   components: {
@@ -2124,8 +2129,16 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
-  props: ['serie']
+  props: ["serie"]
 });
 
 /***/ }),
@@ -2150,12 +2163,9 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
-  props: ['series'],
+  props: ["series"],
   components: {
     listItem: _listItem__WEBPACK_IMPORTED_MODULE_0__["default"]
   }
@@ -2234,7 +2244,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\n.series-container[data-v-e979402c] {\n    width: 50%;\n    margin: auto;\n}\n.heading[data-v-e979402c] {\n    background: #e6e6e6;\n    padding: 10px;\n}\n#title[data-v-e979402c] {\n    text-align: center;\n}\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\n.series-container[data-v-e979402c] {\r\n  padding: 50px;\n}\n.myflix-logo[data-v-e979402c] {\r\n  font-family: \"ZCOOL KuaiLe\", cursive;\r\n  font-size: 48px;\n}\nul[data-v-e979402c] {\r\n  list-style-type: none;\r\n  margin: 0;\r\n  padding: 0;\r\n  overflow: hidden;\r\n  background-color: #333;\n}\nli[data-v-e979402c] {\r\n  float: left;\n}\nli p[data-v-e979402c] {\r\n  display: block;\r\n  color: white;\r\n  text-align: center;\r\n  padding: 14px 16px;\r\n  text-decoration: none;\n}\nli a[data-v-e979402c]:hover {\r\n  background-color: #111;\n}\n.font-red[data-v-e979402c] {\r\n  color: rgb(185, 33, 33);\n}\r\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -2258,7 +2268,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\n.serie[data-v-2a450450] {\n    display: flex;\n    justify-content: center;\n    align-content: center;\n}\n.serie-id[data-v-2a450450] {\n    width: 10%;\n}\n.serie-name[data-v-2a450450] {\n    width: 70%;\n}\n.serie-status[data-v-2a450450] {\n    width: 20%;\n}\n\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\n.card-serie[data-v-2a450450] {\r\n  width: 400px;\r\n  height: 200px;\r\n  border-radius: 8px;\n}\n.card-content[data-v-2a450450] {\r\n  height: 90%;\r\n  display: flex;\r\n  flex-direction: column;\r\n  justify-content: space-between;\n}\n.text-bold-medium[data-v-2a450450] {\r\n  font-weight: bold;\r\n  font-size: 18px;\n}\n.text-red-small[data-v-2a450450] {\r\n  color: rgb(185, 33, 33);\r\n  font-size: 12px;\n}\n.card-content[data-v-2a450450] {\r\n  margin: 10px;\n}\n.card-serie-status[data-v-2a450450] {\r\n  text-align: right;\r\n  color: rgb(175, 175, 175);\r\n  font-weight: bold;\n}\r\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -2282,7 +2292,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\n.serie[data-v-2815b72c] {\n    background-color: #e6e6e6;\n    padding: 5px;\n    margin-top: 5px;\n}\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\n.card-container[data-v-2815b72c] {\r\n  display: flex;\r\n  justify-content: left;\r\n  flex-wrap: wrap;\n}\n.serie[data-v-2815b72c] {\r\n  background-color: rgb(39, 38, 38);\r\n\r\n  padding: 5px;\r\n  margin: 10px;\r\n\r\n  box-shadow: 0 4px 8px 0 black;\r\n  transition: 0.3s;\r\n\r\n  border-top: 3px solid rgb(185, 33, 33);\r\n\r\n  color: rgb(243, 243, 243);\r\n\r\n  cursor: pointer;\r\n  font-family: \"Epilogue\", sans-serif;\n}\n.serie[data-v-2815b72c]:hover {\r\n  box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);\n}\r\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -20430,24 +20440,29 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    { staticClass: "series-container" },
-    [
-      _vm._m(0),
-      _vm._v(" "),
-      _c("list-view", { attrs: { series: _vm.series } })
-    ],
-    1
-  )
+  return _c("div", [
+    _vm._m(0),
+    _vm._v(" "),
+    _c(
+      "div",
+      { staticClass: "series-container" },
+      [_c("list-view", { attrs: { series: _vm.series } })],
+      1
+    )
+  ])
 }
 var staticRenderFns = [
   function() {
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "heading" }, [
-      _c("h2", { attrs: { id: "title" } }, [_vm._v("Séries")])
+    return _c("ul", [
+      _c("li", [
+        _c("p", { staticClass: "myflix-logo", attrs: { href: "#home" } }, [
+          _c("span", { staticClass: "font-red" }, [_vm._v("My")]),
+          _vm._v("flix\n      ")
+        ])
+      ])
     ])
   }
 ]
@@ -20473,17 +20488,23 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "serie" }, [
-    _c("label", { class: _vm.serie - _vm.id }, [
-      _vm._v(" " + _vm._s(_vm.serie.id) + " ")
-    ]),
-    _vm._v("  |  \n    "),
-    _c("label", { class: _vm.serie - _vm.name }, [
-      _vm._v(" " + _vm._s(_vm.serie.nome) + " ")
-    ]),
-    _vm._v("  |  \n    "),
-    _c("label", { class: _vm.serie - _vm.status }, [
-      _vm._v(" " + _vm._s(_vm.serie.status) + " ")
+  return _c("div", { staticClass: "card-serie" }, [
+    _c("div", { staticClass: "card-content" }, [
+      _c("p", [
+        _c("span", { staticClass: "text-red-small" }, [
+          _vm._v("# " + _vm._s(_vm.serie.id) + "   ")
+        ]),
+        _c("strong", { staticClass: "text-bold-medium" }, [
+          _vm._v(_vm._s(_vm.serie.nome))
+        ])
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "card-serie-status" }, [
+        _c("p", { staticClass: "serie-status" }, [
+          _c("i", { staticClass: "fas fa-eye-slash" }),
+          _vm._v(" " + _vm._s(_vm.serie.status) + "\n      ")
+        ])
+      ])
     ])
   ])
 }
@@ -20512,6 +20533,7 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c(
     "div",
+    { staticClass: "card-container" },
     _vm._l(_vm.series, function(serie, index) {
       return _c(
         "div",
@@ -32694,7 +32716,7 @@ Vue.compile = compileToFunctions;
 /***/ ((module) => {
 
 "use strict";
-module.exports = JSON.parse('{"name":"axios","version":"0.21.4","description":"Promise based HTTP client for the browser and node.js","main":"index.js","scripts":{"test":"grunt test","start":"node ./sandbox/server.js","build":"NODE_ENV=production grunt build","preversion":"npm test","version":"npm run build && grunt version && git add -A dist && git add CHANGELOG.md bower.json package.json","postversion":"git push && git push --tags","examples":"node ./examples/server.js","coveralls":"cat coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js","fix":"eslint --fix lib/**/*.js"},"repository":{"type":"git","url":"https://github.com/axios/axios.git"},"keywords":["xhr","http","ajax","promise","node"],"author":"Matt Zabriskie","license":"MIT","bugs":{"url":"https://github.com/axios/axios/issues"},"homepage":"https://axios-http.com","devDependencies":{"coveralls":"^3.0.0","es6-promise":"^4.2.4","grunt":"^1.3.0","grunt-banner":"^0.6.0","grunt-cli":"^1.2.0","grunt-contrib-clean":"^1.1.0","grunt-contrib-watch":"^1.0.0","grunt-eslint":"^23.0.0","grunt-karma":"^4.0.0","grunt-mocha-test":"^0.13.3","grunt-ts":"^6.0.0-beta.19","grunt-webpack":"^4.0.2","istanbul-instrumenter-loader":"^1.0.0","jasmine-core":"^2.4.1","karma":"^6.3.2","karma-chrome-launcher":"^3.1.0","karma-firefox-launcher":"^2.1.0","karma-jasmine":"^1.1.1","karma-jasmine-ajax":"^0.1.13","karma-safari-launcher":"^1.0.0","karma-sauce-launcher":"^4.3.6","karma-sinon":"^1.0.5","karma-sourcemap-loader":"^0.3.8","karma-webpack":"^4.0.2","load-grunt-tasks":"^3.5.2","minimist":"^1.2.0","mocha":"^8.2.1","sinon":"^4.5.0","terser-webpack-plugin":"^4.2.3","typescript":"^4.0.5","url-search-params":"^0.10.0","webpack":"^4.44.2","webpack-dev-server":"^3.11.0"},"browser":{"./lib/adapters/http.js":"./lib/adapters/xhr.js"},"jsdelivr":"dist/axios.min.js","unpkg":"dist/axios.min.js","typings":"./index.d.ts","dependencies":{"follow-redirects":"^1.14.0"},"bundlesize":[{"path":"./dist/axios.min.js","threshold":"5kB"}]}');
+module.exports = JSON.parse('{"_from":"axios@^0.21","_id":"axios@0.21.4","_inBundle":false,"_integrity":"sha512-ut5vewkiu8jjGBdqpM44XxjuCjq9LAKeHVmoVfHVzy8eHgxxq8SbAVQNovDA8mVi05kP0Ea/n/UzcSHcTJQfNg==","_location":"/axios","_phantomChildren":{},"_requested":{"type":"range","registry":true,"raw":"axios@^0.21","name":"axios","escapedName":"axios","rawSpec":"^0.21","saveSpec":null,"fetchSpec":"^0.21"},"_requiredBy":["#DEV:/"],"_resolved":"https://registry.npmjs.org/axios/-/axios-0.21.4.tgz","_shasum":"c67b90dc0568e5c1cf2b0b858c43ba28e2eda575","_spec":"axios@^0.21","_where":"C:\\\\xampp\\\\htdocs\\\\myflix","author":{"name":"Matt Zabriskie"},"browser":{"./lib/adapters/http.js":"./lib/adapters/xhr.js"},"bugs":{"url":"https://github.com/axios/axios/issues"},"bundleDependencies":false,"bundlesize":[{"path":"./dist/axios.min.js","threshold":"5kB"}],"dependencies":{"follow-redirects":"^1.14.0"},"deprecated":false,"description":"Promise based HTTP client for the browser and node.js","devDependencies":{"coveralls":"^3.0.0","es6-promise":"^4.2.4","grunt":"^1.3.0","grunt-banner":"^0.6.0","grunt-cli":"^1.2.0","grunt-contrib-clean":"^1.1.0","grunt-contrib-watch":"^1.0.0","grunt-eslint":"^23.0.0","grunt-karma":"^4.0.0","grunt-mocha-test":"^0.13.3","grunt-ts":"^6.0.0-beta.19","grunt-webpack":"^4.0.2","istanbul-instrumenter-loader":"^1.0.0","jasmine-core":"^2.4.1","karma":"^6.3.2","karma-chrome-launcher":"^3.1.0","karma-firefox-launcher":"^2.1.0","karma-jasmine":"^1.1.1","karma-jasmine-ajax":"^0.1.13","karma-safari-launcher":"^1.0.0","karma-sauce-launcher":"^4.3.6","karma-sinon":"^1.0.5","karma-sourcemap-loader":"^0.3.8","karma-webpack":"^4.0.2","load-grunt-tasks":"^3.5.2","minimist":"^1.2.0","mocha":"^8.2.1","sinon":"^4.5.0","terser-webpack-plugin":"^4.2.3","typescript":"^4.0.5","url-search-params":"^0.10.0","webpack":"^4.44.2","webpack-dev-server":"^3.11.0"},"homepage":"https://axios-http.com","jsdelivr":"dist/axios.min.js","keywords":["xhr","http","ajax","promise","node"],"license":"MIT","main":"index.js","name":"axios","repository":{"type":"git","url":"git+https://github.com/axios/axios.git"},"scripts":{"build":"NODE_ENV=production grunt build","coveralls":"cat coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js","examples":"node ./examples/server.js","fix":"eslint --fix lib/**/*.js","postversion":"git push && git push --tags","preversion":"npm test","start":"node ./sandbox/server.js","test":"grunt test","version":"npm run build && grunt version && git add -A dist && git add CHANGELOG.md bower.json package.json"},"typings":"./index.d.ts","unpkg":"dist/axios.min.js","version":"0.21.4"}');
 
 /***/ })
 
