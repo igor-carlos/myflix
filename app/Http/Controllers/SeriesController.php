@@ -9,7 +9,7 @@ use Illuminate\Http\Response;
 class SeriesController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Lista todas as series cadastradas no SGBD
      *
      * @return \Illuminate\Http\Response
      */
@@ -19,68 +19,106 @@ class SeriesController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        // chamar o formulário de cadastro de séries
-    }
-
-    /**
-     * Store a newly created resource in storage.
+     * Cria um novo registro de série no SGBD
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request): Response
     {
-        //  receber os dados do formulário de cadastro de séries
+        $request->validate(['nome' => 'required|min:5']);
+        $serieCadastrada = Serie::create($request->all());
+        return response ($serieCadastrada, 201);
     }
 
     /**
-     * Display the specified resource.
+     * Exibe os dados de um série específica
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($id): Response
     {
-        // buscar uma série específica
+        $id = filter_var($id, FILTER_VALIDATE_INT);
+        if ($id === false) {
+            return response("Not found", 404);
+        }
+
+        $serie = Serie::findOrFail($id);
+        return response($serie, 200);
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        // chamar o formulário de edição de séries
-    }
-
-    /**
-     * Update the specified resource in storage.
+     * Atualiza uma série específica
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $id): Response
     {
-        // recebeer os dados do formulário de edição de séries
+        $id = filter_var($id, FILTER_VALIDATE_INT);
+        if ($id === false) {
+            return response ("Not found", 404);
+        }
+
+        $request->validate([
+            'nome' => 'min:5|string',
+            'status' => 'in:assistido,não-assistido'
+        ]);
+
+        $serie = Serie::find($id);
+        if (isset($request['nome'])) {
+            $serie->nome = $request['nome'];
+        }
+
+        if (isset($request['status'])) {
+            $serie->status = $request['status'];
+        }
+        $serie->save();
+
+        return response ('No content', 204);
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Atualiza o status da série no SGBD
+     * 
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function status($id): Response
+    {
+        $id = filter_var($id, FILTER_VALIDATE_INT);
+        if ($id === false) {
+            return response ('Not found', 404);
+        }
+
+        $serie = Serie::find($id);
+        if ($serie->status === 'não-assistido') {
+            $serie->status = 'assistido';
+        } else {
+            $serie->status = 'não-assistido';
+        }
+        $serie->save();
+
+        return response ('No content', 204);
+    }
+
+    /**
+     * Exclui uma série do SGBD
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($id): Response
     {
-        // deletar uma série específica
+        $id = filter_var($id, FILTER_VALIDATE_INT);
+        if ($id === false) {
+            return response ('Not found', 404);
+        }
+
+        Serie::destroy($id);
+
+        return response ('Ok', 200);
     }
 }
