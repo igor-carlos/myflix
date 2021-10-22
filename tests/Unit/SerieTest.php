@@ -40,4 +40,36 @@ class SerieTest extends TestCase
         $responseData = $response->getOriginalContent();
         $this->assertEquals(1, $responseData->count());
     }
+
+    public function test_serie_create_new_serie()
+    {
+        $data = [
+            'nome' => 'nome-serie-criada', 
+            'status' => 'assistido'
+        ];
+        $response = $this->json('POST', '/api/v1/serie', $data);
+        $responseData = $response->getOriginalContent();
+        $response->assertStatus(201);
+        $this->assertEquals($data['nome'], $responseData['nome']);
+        $this->assertEquals($data['status'], $responseData['status']);
+    }
+
+    public function test_action_show_response_status_fail()
+    {
+        $response = $this->json('GET', '/api/v1/serie/1');
+        $response->assertStatus(404);
+    }
+
+    public function test_action_show_response_status_sucess()
+    {
+        $data = [
+            'nome' => 'nome-serie-criada', 
+            'status' => 'assistido'
+        ];
+        $response = $this->json('POST', '/api/v1/serie', $data);
+        $responseData = $response->getOriginalContent();
+        $this->assertEquals(1, $responseData['id']);
+        $response = $this->json('GET', '/api/v1/serie/1');
+        $response->assertStatus(200);
+    }
 }
