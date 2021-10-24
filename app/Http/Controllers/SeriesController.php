@@ -28,7 +28,7 @@ class SeriesController extends Controller
     {
         $request->validate(['nome' => 'required|min:5']);
         $serieCadastrada = Serie::create($request->all());
-        return response ($serieCadastrada, 201);
+        return response($serieCadastrada, 201);
     }
 
     /**
@@ -59,7 +59,7 @@ class SeriesController extends Controller
     {
         $id = filter_var($id, FILTER_VALIDATE_INT);
         if ($id === false) {
-            return response ("Not found", 404);
+            return response("Not found", 404);
         }
 
         $request->validate([
@@ -68,6 +68,11 @@ class SeriesController extends Controller
         ]);
 
         $serie = Serie::find($id);
+
+        if ($serie == null) {
+            return response('No content', 204);
+        }
+
         if (isset($request['nome'])) {
             $serie->nome = $request['nome'];
         }
@@ -77,7 +82,7 @@ class SeriesController extends Controller
         }
         $serie->save();
 
-        return response ('No content', 204);
+        return response($serie, 200);
     }
 
     /**
@@ -90,10 +95,15 @@ class SeriesController extends Controller
     {
         $id = filter_var($id, FILTER_VALIDATE_INT);
         if ($id === false) {
-            return response ('Not found', 404);
+            return response('Not found', 404);
         }
 
         $serie = Serie::find($id);
+
+        if ($serie == null) {
+            return response('No content', 204);
+        }
+
         if ($serie->status === 'não-assistido') {
             $serie->status = 'assistido';
         } else {
@@ -101,7 +111,7 @@ class SeriesController extends Controller
         }
         $serie->save();
 
-        return response ('No content', 204);
+        return response($serie, 200);
     }
 
     /**
@@ -114,11 +124,17 @@ class SeriesController extends Controller
     {
         $id = filter_var($id, FILTER_VALIDATE_INT);
         if ($id === false) {
-            return response ('Not found', 404);
+            return response('Not found', 404);
+        }
+
+        $serie = Serie::find($id);
+
+        if ($serie == null) {
+            return response('No content', 204);
         }
 
         Serie::destroy($id);
 
-        return response ('Ok', 200);
+        return response('Ok', 200);
     }
 }
