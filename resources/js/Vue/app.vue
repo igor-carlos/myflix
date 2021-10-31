@@ -8,7 +8,10 @@
       </li>
       <!-- <li style="float: right"><a class="active" href="#about">About</a></li> -->
     </ul>
-    <div class="series-container">
+    <div class="container-fluid">
+       <button> 
+           Qq Coisa
+       </button> 
       <list-view :series="series" />
     </div>
   </div>
