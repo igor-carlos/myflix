@@ -20,7 +20,7 @@ export default {
 <style scoped>
 .card-container {
   display: flex;
-  justify-content: left;
+  justify-content: center;
   flex-wrap: wrap;
 }
 
