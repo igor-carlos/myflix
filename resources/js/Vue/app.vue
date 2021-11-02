@@ -16,9 +16,6 @@
     </ul>
     <div class="container-fluid">
       <form-series v-on:reloadlist="getSeries()" />
-      <div class="card-body">
-        <table-series :series="series" v-on:reloadlist="getSeries()" />
-      </div>
     </div>
     <list-view :series="series" />
   </div>
