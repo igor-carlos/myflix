@@ -2,27 +2,26 @@
   <div>
     <ul>
       <li>
-        <a href="#" style="text-decoration:none">
+        <a href="#" style="text-decoration: none">
           <p class="myflix-logo" href="#home">
-              <span class="font-red">My</span>flix
+            <span class="font-red">My</span>flix
           </p>
-        </a>  
+        </a>
       </li>
+      <!--
       <li style="float: right">
-        <!-- <a class="active" href="#about">About</a> -->
-      </li>
+        <a class="active" href="#about">About</a> 
+      </li> 
+      -->
     </ul>
-        <div class="container-fluid">
-            <form-series v-on:reloadlist="getSeries()"/> 
-                <div class="card-body">
-                    <table-series 
-                        :series="series" 
-                        v-on:reloadlist="getSeries()"
-                    />
-                </div>
-        </div>
-    <list-view :series="series" />
+    <div class="container-fluid">
+      <form-series v-on:reloadlist="getSeries()" />
+      <div class="card-body">
+        <table-series :series="series" v-on:reloadlist="getSeries()" />
+      </div>
     </div>
+    <list-view :series="series" />
+  </div>
 </template>
 
 <script>
@@ -38,7 +37,6 @@ export default {
   data: function () {
     return {
       series: [],
-      serieName: "",
     };
   },
   methods: {
@@ -58,7 +56,6 @@ export default {
 </script>
 
 <style scoped>
-
 .myflix-logo {
   font-family: "ZCOOL KuaiLe", cursive;
   font-size: 48px;
@@ -91,5 +88,4 @@ li a:hover {
 .font-red {
   color: rgb(185, 33, 33);
 }
-
 </style>
