@@ -5,9 +5,22 @@
         <span class="text-red-small"># {{ serie.id }} &nbsp;&nbsp;</span
         ><strong class="text-bold-medium">{{ serie.nome }}</strong>
       </p>
+      <p class="streaming" v-if="serie.streaming">
+        <i class="fas fa-tv"></i>
+        {{ serie.streaming }}
+      </p>
+      <p class="categoria" v-if="serie.categoria">
+        <i class="fas fa-list"></i>
+        {{ serie.categoria }}
+      </p>
       <div class="card-serie-status">
         <p class="serie-status">
-          <i class="fas fa-eye-slash"></i> {{ serie.status }}
+          <i
+            v-if="serie.status == 'não-assistido'"
+            class="fas fa-eye-slash"
+          ></i>
+          <i v-else class="fas fa-eye"></i>
+          {{ serie.status }}
         </p>
       </div>
     </div>
@@ -49,6 +62,18 @@ export default {
 }
 
 .card-serie-status {
+  text-align: right;
+  color: rgb(175, 175, 175);
+  font-weight: bold;
+}
+
+.streaming {
+  text-align: right;
+  color: rgb(175, 175, 175);
+  font-weight: bold;
+}
+
+.categoria {
   text-align: right;
   color: rgb(175, 175, 175);
   font-weight: bold;
