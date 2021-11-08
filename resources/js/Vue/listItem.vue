@@ -1,10 +1,15 @@
 <template>
   <div class="card-serie">
     <div class="card-content">
-      <p>
-        <span class="text-red-small"># {{ serie.id }} &nbsp;&nbsp;</span
-        ><strong class="text-bold-medium">{{ serie.nome }}</strong>
-      </p>
+      <div class="title-content">
+        <p>
+          <span class="text-red-small"># {{ serie.id }} &nbsp;&nbsp;</span>
+          <strong class="text-bold-medium">{{ serie.nome }}</strong>
+        </p>
+        <div class="edit-serie" v-on:click="editSerie(serie)">
+          <i class="fas fa-edit"></i>
+        </div>
+      </div>
       <p class="streaming" v-if="serie.streaming">
         <i class="fas fa-tv"></i>
         {{ serie.streaming }}
@@ -30,6 +35,11 @@
 <script>
 export default {
   props: ["serie"],
+  methods: {
+    editSerie(serie) {
+      this.$root.$emit("editSerie", serie);
+    },
+  },
 };
 </script>
 
@@ -45,6 +55,25 @@ export default {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+}
+
+.title-content {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.edit-serie {
+  display: flex;
+  justify-content: right;
+
+  height: 30px;
+  width: 30px;
+  border-radius: 10px;
+}
+
+.edit-serie:hover {
+  cursor: pointer;
 }
 
 .text-bold-medium {

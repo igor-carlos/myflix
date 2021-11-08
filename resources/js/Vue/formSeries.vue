@@ -22,18 +22,31 @@
         <option v-bind:value="'Prime Video'">Prime Video</option>
         <option v-bind:value="'Disney Plus'">Disney Plus</option>
       </select>
-      <button @click="createSeries">Cadastrar</button>
+      <button v-if="!isEdit" @click="createSeries" class="btn-register">
+        Cadastrar
+      </button>
+      <button v-else @click="saveEditSerie" class="btn-save-edit">
+        Salvar
+      </button>
     </div>
   </div>
 </template>
 
 <script>
 export default {
+  mounted: function () {
+    this.$root.$on("editSerie", (serie) => {
+      this.idSerieEdit = serie.id;
+      this.buildEditSerieForm(serie);
+    });
+  },
   data: function () {
     return {
       serieName: "",
       selectedCategory: "Categoria",
       selectedStreaming: "Streaming",
+      isEdit: false,
+      idSerieEdit: 0,
     };
   },
   methods: {
@@ -59,9 +72,52 @@ export default {
         });
     },
     clearInputs() {
+      this.idSerieEdit = null;
       this.serieName = "";
       this.selectedCategory = "Categoria";
       this.selectedStreaming = "Streaming";
+    },
+    buildEditSerieForm(serie) {
+      if (serie.nome) {
+        this.serieName = serie.nome;
+      } else {
+        this.serieName = "";
+      }
+
+      if (serie.categoria) {
+        this.selectedCategory = serie.categoria;
+      } else {
+        this.selectedCategory = "Categoria";
+      }
+
+      if (serie.streaming) {
+        this.selectedStreaming = serie.streaming;
+      } else {
+        this.selectedStreaming = "Streaming";
+      }
+
+      this.isEdit = true;
+    },
+    saveEditSerie() {
+      if (this.serieName == "") return;
+      if (["", "Categoria"].includes(this.selectedCategory)) return;
+      if (["", "Streaming"].includes(this.selectedStreaming)) return;
+
+      axios
+        .patch(`api/v1/serie/${this.idSerieEdit}`, {
+          nome: this.serieName,
+          categoria: this.selectedCategory,
+          streaming: this.selectedStreaming,
+        })
+        .then((response) => {
+          if (response.status == "200") {
+            this.$emit("reloadlist");
+            this.clearInputs();
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     },
   },
 };
@@ -95,7 +151,7 @@ export default {
   font-weight: bold;
 }
 
-.container-form button {
+.btn-register {
   padding: 12px 20px;
   cursor: pointer;
 
@@ -111,8 +167,28 @@ export default {
   letter-spacing: 1px;
 }
 
-.container-form button:hover {
+.btn-register:hover {
   background-color: rgb(112, 22, 22);
+}
+
+.btn-save-edit {
+  padding: 12px 20px;
+  cursor: pointer;
+
+  color: rgb(185, 33, 33);
+  background-color: white;
+
+  border-radius: 5px;
+
+  border-color: transparent;
+
+  font-family: "Epilogue", sans-serif;
+  font-weight: bold;
+  letter-spacing: 1px;
+}
+
+.btn-save-edit:hover {
+  background-color: rgb(189, 189, 189);
 }
 
 .container-others {
