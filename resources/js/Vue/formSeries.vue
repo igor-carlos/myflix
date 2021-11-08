@@ -29,6 +29,7 @@
         Salvar
       </button>
     </div>
+    <notifications class="voerro-notification"></notifications>
   </div>
 </template>
 
@@ -51,10 +52,7 @@ export default {
   },
   methods: {
     createSeries() {
-      if (this.serieName == "") return;
-      if (["", "Categoria"].includes(this.selectedCategory)) return;
-      if (["", "Streaming"].includes(this.selectedStreaming)) return;
-
+      if (!this.validateFormData()) return;
       axios
         .post("api/v1/serie", {
           nome: this.serieName,
@@ -63,19 +61,52 @@ export default {
         })
         .then((response) => {
           if (response.status == "201") {
+            notify({
+              text: "Série cadastrada com sucesso !",
+              theme: "green",
+            });
             this.$emit("reloadlist");
             this.clearInputs();
           }
         })
         .catch((error) => {
-          console.log(error);
+          notify({
+            text: `Erro: ${error}`,
+            theme: "red",
+          });
         });
     },
     clearInputs() {
       this.idSerieEdit = null;
+      this.isEdit = false;
+
       this.serieName = "";
       this.selectedCategory = "Categoria";
       this.selectedStreaming = "Streaming";
+    },
+    validateFormData() {
+      if (this.serieName == "") {
+        notify({
+          text: "Nome da série inválido !",
+          theme: "red",
+        });
+        return false;
+      }
+      if (["", "Categoria"].includes(this.selectedCategory)) {
+        notify({
+          text: "Categoria inválida !",
+          theme: "red",
+        });
+        return false;
+      }
+      if (["", "Streaming"].includes(this.selectedStreaming)) {
+        notify({
+          text: "Streaming inválida !",
+          theme: "red",
+        });
+        return false;
+      }
+      return true;
     },
     buildEditSerieForm(serie) {
       if (serie.nome) {
@@ -99,10 +130,7 @@ export default {
       this.isEdit = true;
     },
     saveEditSerie() {
-      if (this.serieName == "") return;
-      if (["", "Categoria"].includes(this.selectedCategory)) return;
-      if (["", "Streaming"].includes(this.selectedStreaming)) return;
-
+      if (!this.validateFormData()) return;
       axios
         .patch(`api/v1/serie/${this.idSerieEdit}`, {
           nome: this.serieName,
@@ -111,12 +139,19 @@ export default {
         })
         .then((response) => {
           if (response.status == "200") {
+            notify({
+              text: "Edição realizada com sucesso !",
+              theme: "green",
+            });
             this.$emit("reloadlist");
             this.clearInputs();
           }
         })
         .catch((error) => {
-          console.log(error);
+          notify({
+            text: `Erro: ${error}`,
+            theme: "red",
+          });
         });
     },
   },
@@ -220,5 +255,16 @@ export default {
   font-size: 16px;
 
   color: rgb(112, 112, 112);
+}
+
+.voerro-notification {
+  margin: 0.5rem 0;
+  padding: 1rem;
+
+  border-radius: 0.3rem;
+  filter: opacity(90%);
+
+  font-family: "Epilogue", sans-serif;
+  color: white;
 }
 </style>
