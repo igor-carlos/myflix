@@ -170,9 +170,26 @@ export default {
     },
     deleteSerie(serie) {
       console.log(serie);
-      //axios.delete("")
-    }
+      axios
+        .delete(`api/v1/serie/${serie.id}`)
+        .then((response) => {
+          if (response.status == "200") {
+            notify({
+              text: "Exclusão realizada com sucesso !",
+              theme: "green",
+            });
+            this.$emit("reloadlist");
+          }
+        })
+        .catch((error) => {
+          notify({
+            text: `Erro: ${error}`,
+            theme: "red",
+          });
+        })
+    },
   },
+
 };
 </script>
 
