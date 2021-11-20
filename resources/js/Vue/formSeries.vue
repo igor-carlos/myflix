@@ -30,15 +30,22 @@
       </button>
     </div>
     <notifications class="voerro-notification"></notifications>
+    <modal-delete-serie v-if="showModalDeleteSerie">
+      <h3 slot="header">Oi</h3>
+    </modal-delete-serie>
   </div>
 </template>
 
 <script>
 export default {
+  
   mounted: function () {
     this.$root.$on("editSerie", (serie) => {
       this.idSerieEdit = serie.id;
       this.buildEditSerieForm(serie);
+    });
+    this.$root.$on("deleteSerie", (serie) => {
+      this.deleteSerie(serie);
     });
   },
   data: function () {
@@ -48,6 +55,7 @@ export default {
       selectedStreaming: "Streaming",
       isEdit: false,
       idSerieEdit: 0,
+      showModalDeleteSerie: false,
     };
   },
   methods: {
@@ -70,6 +78,12 @@ export default {
           }
         })
         .catch((error) => {
+          if (erro.response.data == "422") {
+            notify({
+              text: "Necessário no minímo 4 letras para o nome da série",
+              theme: "red",
+            });
+          }
           notify({
             text: `Erro: ${error}`,
             theme: "red",
@@ -85,7 +99,7 @@ export default {
       this.selectedStreaming = "Streaming";
     },
     validateFormData() {
-      if (this.serieName == "") {
+      if (this.serieName == "" || this.serieName.length < 4) {
         notify({
           text: "Nome da série inválido !",
           theme: "red",
@@ -154,6 +168,10 @@ export default {
           });
         });
     },
+    deleteSerie(serie) {
+      console.log(serie);
+      //axios.delete("")
+    }
   },
 };
 </script>

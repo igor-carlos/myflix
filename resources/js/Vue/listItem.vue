@@ -6,8 +6,13 @@
           <span class="text-red-small"># {{ serie.id }} &nbsp;&nbsp;</span>
           <strong class="text-bold-medium">{{ serie.nome }}</strong>
         </p>
-        <div class="edit-serie" v-on:click="editSerie(serie)">
-          <i class="fas fa-edit"></i>
+        <div class="title-itens">
+          <div class="edit-serie" v-on:click="editSerie(serie)">
+            <i class="fas fa-edit"></i>
+          </div>
+          <div class="delete-serie" v-on:click="deleteSerie(serie)">
+            <i class="fas fa-trash"></i>
+          </div>
         </div>
       </div>
       <p class="streaming" v-if="serie.streaming">
@@ -39,8 +44,12 @@ export default {
     editSerie(serie) {
       this.$root.$emit("editSerie", serie);
     },
+    deleteSerie(serie) {
+      this.$root.$emit("deleteSerie", serie);
+    }
   },
 };
+
 </script>
 
 <style scoped>
@@ -63,10 +72,15 @@ export default {
   justify-content: space-between;
 }
 
+.title-itens {
+  display: flex;
+  flex-direction: row;
+}
+
 .edit-serie {
   display: flex;
   justify-content: right;
-
+  margin-right: 10px;
   height: 30px;
   width: 30px;
   border-radius: 10px;
@@ -74,6 +88,12 @@ export default {
 
 .edit-serie:hover {
   cursor: pointer;
+  color: #0356fc;
+}
+
+.delete-serie:hover {
+  cursor: pointer;
+  color: #fc030b;
 }
 
 .text-bold-medium {
