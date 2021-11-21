@@ -30,22 +30,52 @@
       </button>
     </div>
     <notifications class="voerro-notification"></notifications>
-    <modal-delete-serie v-if="showModalDeleteSerie">
-      <h3 slot="header">Oi</h3>
-    </modal-delete-serie>
+    <template v-if="showModalDeleteSerie" name="modalDeleteSerie">
+      <transition name="modal">
+        <div class="modal-mask">
+          <div class="modal-wrapper">
+            <div class="modal-container">
+              <div class="modal-body">
+                <slot name="body">
+                  Você tem certeza que deseja remover a série
+                  {{ serieToDeleteName }} ?</slot
+                >
+              </div>
+              <div class="modal-footer">
+                <button
+                  class="modal-button-confirm"
+                  @click="confirmSerieDeletion"
+                >
+                  Confirmar
+                </button>
+                <button
+                  class="modal-button-cancel"
+                  @click="cancelSerieDeletion"
+                >
+                  Cancelar
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </transition>
+    </template>
+  </div>
+</template>
   </div>
 </template>
 
 <script>
 export default {
-  
   mounted: function () {
     this.$root.$on("editSerie", (serie) => {
       this.idSerieEdit = serie.id;
       this.buildEditSerieForm(serie);
     });
     this.$root.$on("deleteSerie", (serie) => {
-      this.deleteSerie(serie);
+      this.showModalDeleteSerie = true;
+      this.serieToDeleteId = serie.id;
+      this.serieToDeleteName = serie.nome;
     });
   },
   data: function () {
@@ -56,6 +86,8 @@ export default {
       isEdit: false,
       idSerieEdit: 0,
       showModalDeleteSerie: false,
+      serieToDeleteId: null,
+      serieToDeleteName: "",
     };
   },
   methods: {
@@ -152,7 +184,7 @@ export default {
           streaming: this.selectedStreaming,
         })
         .then((response) => {
-          if (response.status == "200") {
+          if (response.status == 200) {
             notify({
               text: "Edição realizada com sucesso !",
               theme: "green",
@@ -168,12 +200,22 @@ export default {
           });
         });
     },
-    deleteSerie(serie) {
-      console.log(serie);
+    cancelSerieDeletion() {
+      this.showModalDeleteSerie = false;
+    },
+    confirmSerieDeletion() {
+      if (!this.serieToDeleteId) {
+        notify({
+          text: "Não foi possível indentificar a série a ser deletada",
+          theme: "red",
+        });
+        return;
+      }
       axios
-        .delete(`api/v1/serie/${serie.id}`)
+        .delete(`api/v1/serie/${this.serieToDeleteId}`)
         .then((response) => {
-          if (response.status == "200") {
+          this.showModalDeleteSerie = false;
+          if (response.status == 200) {
             notify({
               text: "Exclusão realizada com sucesso !",
               theme: "green",
@@ -182,14 +224,14 @@ export default {
           }
         })
         .catch((error) => {
+          this.showModalDeleteSerie = false;
           notify({
             text: `Erro: ${error}`,
             theme: "red",
           });
-        })
+        });
     },
   },
-
 };
 </script>
 
@@ -271,16 +313,12 @@ export default {
 
 .container-others select {
   width: 100%;
-
   padding: 12px 20px;
   margin-right: 5px;
-
   box-sizing: border-box;
   border-radius: 5px;
-
   font-family: "Epilogue", sans-serif;
   font-weight: bold;
-
   color: rgb(112, 112, 112);
 }
 
@@ -288,18 +326,95 @@ export default {
   font-family: "Epilogue", sans-serif;
   font-weight: bold;
   font-size: 16px;
-
   color: rgb(112, 112, 112);
 }
 
 .voerro-notification {
   margin: 0.5rem 0;
   padding: 1rem;
-
   border-radius: 0.3rem;
   filter: opacity(90%);
-
   font-family: "Epilogue", sans-serif;
   color: white;
+}
+
+.modal-mask {
+  position: fixed;
+  z-index: 9998;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.8);
+  display: table;
+  transition: opacity 0.3s ease;
+}
+
+.modal-wrapper {
+  display: table-cell;
+  vertical-align: middle;
+}
+
+.modal-container {
+  width: 300px;
+  margin: 0px auto;
+  padding: 20px 30px;
+  background-color: #333;
+  color: white;
+  border-radius: 8px;
+  border: 2px solid rgb(185, 33, 33);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);
+  transition: all 0.3s ease;
+  font-family: "Epilogue", sans-serif;
+}
+
+.modal-body {
+  margin: 20px 0;
+}
+
+.modal-enter {
+  opacity: 0;
+}
+
+.modal-leave-active {
+  opacity: 0;
+}
+
+.modal-enter .modal-container,
+.modal-leave-active .modal-container {
+  -webkit-transform: scale(1.1);
+  transform: scale(1.1);
+}
+
+.modal-button-confirm {
+  background-color: rgb(68, 163, 68);
+  color: white;
+  font-family: "Epilogue", sans-serif;
+  font-weight: bold;
+  padding: 8px 10px 8px 10px;
+  border-radius: 5px;
+  border: none;
+  margin: 5px;
+}
+
+.modal-button-confirm:hover {
+  background-color: rgb(47, 139, 47);
+  cursor: pointer;
+}
+
+.modal-button-cancel {
+  background-color: rgb(185, 33, 33);
+  color: white;
+  font-family: "Epilogue", sans-serif;
+  font-weight: bold;
+  padding: 8px 10px 8px 10px;
+  border-radius: 5px;
+  border: none;
+  margin: 5px;
+}
+
+.modal-button-cancel:hover {
+  background-color: rgb(141, 38, 38);
+  cursor: pointer;
 }
 </style>

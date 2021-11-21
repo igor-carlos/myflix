@@ -46,10 +46,9 @@ export default {
     },
     deleteSerie(serie) {
       this.$root.$emit("deleteSerie", serie);
-    }
+    },
   },
 };
-
 </script>
 
 <style scoped>
@@ -88,12 +87,12 @@ export default {
 
 .edit-serie:hover {
   cursor: pointer;
-  color: #0356fc;
+  color: #70a0ff;
 }
 
 .delete-serie:hover {
   cursor: pointer;
-  color: #fc030b;
+  color: #ff8387;
 }
 
 .text-bold-medium {
