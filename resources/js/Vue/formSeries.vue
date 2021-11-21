@@ -102,6 +102,7 @@
 </template>
 
 <script>
+import axios from "axios";
 export default {
   mounted: function () {
     this.$root.$on("editSerie", (serie) => {
@@ -269,7 +270,32 @@ export default {
       this.showModalEditSerieStatus = false;
     },
     confirmSeriesStatusEdit() {
-      console.log("editar status da série com id" + this.serieToEditStatusId);
+      if (!this.serieToEditStatusId) {
+        notify({
+          text: "Não foi possível indentificar a série a ser deletada",
+          theme: "red",
+        });
+        return;
+      }
+      axios
+        .put(`api/v1/serie/${this.serieToEditStatusId}/status`)
+        .then((response) => {
+          this.showModalEditSerieStatus = false;
+          if (response.status == 200) {
+            notify({
+              text: "Status alterado !",
+              theme: "green",
+            });
+            this.$emit("reloadlist");
+          }
+        })
+        .catch((error) => {
+          this.showModalEditSerieStatus = false;
+          notify({
+            text: `Erro: ${error}`,
+            theme: "red",
+          });
+        });
     },
   },
 };
