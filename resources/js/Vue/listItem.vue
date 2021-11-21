@@ -7,6 +7,9 @@
           <strong class="text-bold-medium">{{ serie.nome }}</strong>
         </p>
         <div class="title-itens">
+          <div class="edit-serie-status" v-on:click="editSerieStatus(serie)">
+            <i class="fas fa-eye"></i>
+          </div>
           <div class="edit-serie" v-on:click="editSerie(serie)">
             <i class="fas fa-edit"></i>
           </div>
@@ -47,6 +50,9 @@ export default {
     deleteSerie(serie) {
       this.$root.$emit("deleteSerie", serie);
     },
+    editSerieStatus(serie) {
+      this.$root.$emit("editSerieStatus", serie);
+    },
   },
 };
 </script>
@@ -76,13 +82,17 @@ export default {
   flex-direction: row;
 }
 
-.edit-serie {
-  display: flex;
-  justify-content: right;
+.edit-serie-status {
   margin-right: 10px;
-  height: 30px;
-  width: 30px;
-  border-radius: 10px;
+}
+
+.edit-serie-status:hover {
+  cursor: pointer;
+  color: rgb(137, 187, 137);
+}
+
+.edit-serie {
+  margin-right: 10px;
 }
 
 .edit-serie:hover {

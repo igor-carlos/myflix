@@ -60,6 +60,42 @@
         </div>
       </transition>
     </template>
+    <template v-if="showModalEditSerieStatus" name="modalEditSerieStatus">
+      <transition name="modal">
+        <div class="modal-mask">
+          <div class="modal-wrapper">
+            <div class="modal-container">
+              <div class="modal-body">
+                <slot name="body">
+                  Você tem certeza que alterar o status da série
+                  {{ serieToEditStatusName }} para
+                  {{
+                    serieToEditStatusStatus === "assistido"
+                      ? "não-assistido"
+                      : "assistido"
+                  }}
+                  ?</slot
+                >
+              </div>
+              <div class="modal-footer">
+                <button
+                  class="modal-button-confirm"
+                  @click="confirmSeriesStatusEdit"
+                >
+                  Confirmar
+                </button>
+                <button
+                  class="modal-button-cancel"
+                  @click="cancelSeriesStatusEdit"
+                >
+                  Cancelar
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </transition>
+    </template>
   </div>
 </template>
   </div>
@@ -77,6 +113,12 @@ export default {
       this.serieToDeleteId = serie.id;
       this.serieToDeleteName = serie.nome;
     });
+    this.$root.$on("editSerieStatus", (serie) => {
+      this.showModalEditSerieStatus = true;
+      this.serieToEditStatusId = serie.id;
+      this.serieToEditStatusName = serie.nome;
+      this.serieToEditStatusStatus = serie.status;
+    });
   },
   data: function () {
     return {
@@ -88,6 +130,10 @@ export default {
       showModalDeleteSerie: false,
       serieToDeleteId: null,
       serieToDeleteName: "",
+      showModalEditSerieStatus: false,
+      serieToEditStatusId: null,
+      serieToEditStatusName: "",
+      serieToEditStatusStatus: "",
     };
   },
   methods: {
@@ -125,7 +171,6 @@ export default {
     clearInputs() {
       this.idSerieEdit = null;
       this.isEdit = false;
-
       this.serieName = "";
       this.selectedCategory = "Categoria";
       this.selectedStreaming = "Streaming";
@@ -155,24 +200,13 @@ export default {
       return true;
     },
     buildEditSerieForm(serie) {
-      if (serie.nome) {
-        this.serieName = serie.nome;
-      } else {
-        this.serieName = "";
-      }
-
-      if (serie.categoria) {
-        this.selectedCategory = serie.categoria;
-      } else {
-        this.selectedCategory = "Categoria";
-      }
-
-      if (serie.streaming) {
-        this.selectedStreaming = serie.streaming;
-      } else {
-        this.selectedStreaming = "Streaming";
-      }
-
+      serie.nome ? (this.serieName = serie.nome) : (this.serieName = "");
+      serie.categoria
+        ? (this.selectedCategory = serie.categoria)
+        : (this.selectedCategory = "Categoria");
+      serie.streaming
+        ? (this.selectedStreaming = serie.streaming)
+        : (this.selectedStreaming = "Streaming");
       this.isEdit = true;
     },
     saveEditSerie() {
@@ -231,6 +265,12 @@ export default {
           });
         });
     },
+    cancelSeriesStatusEdit() {
+      this.showModalEditSerieStatus = false;
+    },
+    confirmSeriesStatusEdit() {
+      console.log("editar status da série com id" + this.serieToEditStatusId);
+    },
   },
 };
 </script>
@@ -241,24 +281,19 @@ export default {
   align-items: center;
   justify-content: center;
   flex-direction: column;
-
   width: 100%;
   justify-content: center;
   text-align: center;
-
   margin-top: 20px;
   margin-bottom: 30px;
 }
 
 .container-input input {
   width: 700px;
-
   padding: 12px 20px;
   margin: 5px 0;
-
   box-sizing: border-box;
   border-radius: 5px;
-
   font-family: "Epilogue", sans-serif;
   font-weight: bold;
 }
@@ -266,14 +301,10 @@ export default {
 .btn-register {
   padding: 12px 20px;
   cursor: pointer;
-
   color: white;
   background-color: rgb(185, 33, 33);
-
   border-radius: 5px;
-
   border-color: transparent;
-
   font-family: "Epilogue", sans-serif;
   font-weight: bold;
   letter-spacing: 1px;
@@ -286,14 +317,10 @@ export default {
 .btn-save-edit {
   padding: 12px 20px;
   cursor: pointer;
-
   color: rgb(185, 33, 33);
   background-color: white;
-
   border-radius: 5px;
-
   border-color: transparent;
-
   font-family: "Epilogue", sans-serif;
   font-weight: bold;
   letter-spacing: 1px;
