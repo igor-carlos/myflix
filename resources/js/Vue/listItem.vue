@@ -8,7 +8,7 @@
         </p>
         <div class="title-itens">
           <div class="edit-serie-status" v-on:click="editSerieStatus(serie)">
-            <i class="fas fa-eye"></i>
+            <i class="fas fa-check-square"></i>
           </div>
           <div class="edit-serie" v-on:click="editSerie(serie)">
             <i class="fas fa-edit"></i>
