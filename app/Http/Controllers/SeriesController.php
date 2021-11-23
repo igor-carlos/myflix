@@ -4,7 +4,10 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Serie;
+use App\Models\Season;
 use Illuminate\Http\Response;
+
+use Illuminate\Support\Facades\DB;
 
 class SeriesController extends Controller
 {
@@ -15,7 +18,11 @@ class SeriesController extends Controller
      */
     public function index(): Response
     {
-        return response(Serie::all(), 200);
+        $series = DB::table('series')
+            ->join('seasons', 'series.id', '=', 'seasons.serie_id')
+            ->select('series.*', 'seasons.episodeo', 'seasons.temporada')
+            ->get();
+        return response($series, 200);
     }
 
     /**
@@ -28,6 +35,9 @@ class SeriesController extends Controller
     {
         $request->validate(['nome' => 'required|min:5']);
         $serieCadastrada = Serie::create($request->all());
+        Season::create([
+            'serie_id' => $serieCadastrada->id,
+        ]);
         return response($serieCadastrada, 201);
     }
 
