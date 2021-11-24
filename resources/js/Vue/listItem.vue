@@ -32,7 +32,7 @@
             v-if="serie.episodeo && serie.status == 'não-assistido'"
           >
             <i class="fas fa-film"></i>
-            Episódeo: {{ serie.episodeo }}
+            Episódio: {{ serie.episodeo }}
           </p>
           <p
             class="temporada"
