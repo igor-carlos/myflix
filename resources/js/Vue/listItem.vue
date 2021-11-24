@@ -9,18 +9,31 @@
         <div class="title-itens">
           <div
             v-if="serie.status == 'não-assistido'"
+            v-tooltip="'Alterar episódio'"
             class="edit-serie-episodeo"
             v-on:click="editSerieEpisodeo(serie)"
           >
             <i class="fas fa-film"></i>
           </div>
-          <div class="edit-serie-status" v-on:click="editSerieStatus(serie)">
+          <div
+            v-tooltip="'Alterar Status'"
+            class="edit-serie-status"
+            v-on:click="editSerieStatus(serie)"
+          >
             <i class="fas fa-check-square"></i>
           </div>
-          <div class="edit-serie" v-on:click="editSerie(serie)">
+          <div
+            v-tooltip="'Editar'"
+            class="edit-serie"
+            v-on:click="editSerie(serie)"
+          >
             <i class="fas fa-edit"></i>
           </div>
-          <div class="delete-serie" v-on:click="deleteSerie(serie)">
+          <div
+            v-tooltip="'Excluir'"
+            class="delete-serie"
+            v-on:click="deleteSerie(serie)"
+          >
             <i class="fas fa-trash"></i>
           </div>
         </div>
@@ -206,5 +219,11 @@ export default {
   display: flex;
   flex-direction: column;
   justify-content: space-around;
+}
+
+.v-tooltip__content {
+  font-size: 50px !important;
+  opacity: 1 !important;
+  display: block !important;
 }
 </style>
