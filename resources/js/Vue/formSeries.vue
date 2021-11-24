@@ -80,13 +80,13 @@
               <div class="modal-footer">
                 <button
                   class="modal-button-confirm"
-                  @click="confirmSeriesStatusEdit"
+                  @click="confirmSerieStatusEdit"
                 >
                   Confirmar
                 </button>
                 <button
                   class="modal-button-cancel"
-                  @click="cancelSeriesStatusEdit"
+                  @click="cancelSerieStatusEdit"
                 >
                   Cancelar
                 </button>
@@ -96,8 +96,51 @@
         </div>
       </transition>
     </template>
-  </div>
-</template>
+    <template v-if="showModalEditSerieEpisodeo" name="modalEditSerieEpisodeo">
+      <transition name="modal">
+        <div class="modal-mask">
+          <div class="modal-wrapper">
+            <div class="modal-container">
+              <div class="modal-body">
+                <div class="label-season-input">
+                  <label for="episode-input">Episódio:</label>
+                  <input
+                    id="episode-input"
+                    v-model="episodeNumber"
+                    type="number"
+                    placeholder="Número do episódio"
+                    required
+                  />
+                </div>
+                <div class="label-season-input">
+                  <label for="season-input">Temporada: </label>
+                  <input
+                    v-model="seasonNumber"
+                    type="number"
+                    placeholder="Número da temporada"
+                    required
+                  />
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button
+                  class="modal-button-confirm"
+                  @click="confirmSerieEpisodeoEdit"
+                >
+                  Confirmar
+                </button>
+                <button
+                  class="modal-button-cancel"
+                  @click="cancelSerieEpisodeoEdit"
+                >
+                  Cancelar
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </transition>
+    </template>
   </div>
 </template>
 
@@ -120,6 +163,13 @@ export default {
       this.serieToEditStatusName = serie.nome;
       this.serieToEditStatusStatus = serie.status;
     });
+    this.$root.$on("editSerieEpisodeo", (serie) => {
+      this.showModalEditSerieEpisodeo = true;
+      this.serieToEditEpisodeoId = serie.id;
+      this.serieToEditEpisodeoName = serie.nome;
+      this.seasonNumber = serie.temporada;
+      this.episodeNumber = serie.episodeo;
+    });
   },
   data: function () {
     return {
@@ -135,6 +185,11 @@ export default {
       serieToEditStatusId: null,
       serieToEditStatusName: "",
       serieToEditStatusStatus: "",
+      showModalEditSerieEpisodeo: false,
+      serieToEditEpisodeoId: null,
+      serieToEditEpisodeoName: "",
+      episodeNumber: null,
+      seasonNumber: null,
     };
   },
   methods: {
@@ -177,9 +232,9 @@ export default {
       this.selectedStreaming = "Streaming";
     },
     validateFormData() {
-      if (this.serieName == "" || this.serieName.length < 4) {
+      if (this.serieName == "" || this.serieName.length <= 4) {
         notify({
-          text: "Nome da série inválido !",
+          text: "Nome da série inválido (precisa ser maior que 4 caracteres)!",
           theme: "red",
         });
         return false;
@@ -266,13 +321,13 @@ export default {
           });
         });
     },
-    cancelSeriesStatusEdit() {
+    cancelSerieStatusEdit() {
       this.showModalEditSerieStatus = false;
     },
-    confirmSeriesStatusEdit() {
+    confirmSerieStatusEdit() {
       if (!this.serieToEditStatusId) {
         notify({
-          text: "Não foi possível indentificar a série a ser deletada",
+          text: "Não foi possível indentificar a série a ser editada",
           theme: "red",
         });
         return;
@@ -291,6 +346,44 @@ export default {
         })
         .catch((error) => {
           this.showModalEditSerieStatus = false;
+          notify({
+            text: `Erro: ${error}`,
+            theme: "red",
+          });
+        });
+    },
+    cancelSerieEpisodeoEdit() {
+      this.showModalEditSerieEpisodeo = false;
+    },
+    confirmSerieEpisodeoEdit() {
+      if (
+        !this.serieToEditEpisodeoId &&
+        !this.episodeNumber &&
+        !this.seasonNumber
+      ) {
+        notify({
+          text: "Não foi possível indentificar a série a ser editada",
+          theme: "red",
+        });
+        return;
+      }
+      axios
+        .put(`api/v1/temporada/${this.serieToEditEpisodeoId}`, {
+          episodeo: this.episodeNumber,
+          temporada: this.seasonNumber,
+        })
+        .then((response) => {
+          this.showModalEditSerieEpisodeo = false;
+          if (response.status == 200) {
+            notify({
+              text: "Episódeo alterado !",
+              theme: "green",
+            });
+            this.$emit("reloadlist");
+          }
+        })
+        .catch((error) => {
+          this.showModalEditSerieEpisodeo = false;
           notify({
             text: `Erro: ${error}`,
             theme: "red",
@@ -469,5 +562,14 @@ export default {
 .modal-button-cancel:hover {
   background-color: rgb(141, 38, 38);
   cursor: pointer;
+}
+
+.label-season-input {
+  margin: 10px;
+  display: flex;
+  justify-content: space-between;
+}
+.label-season-input label {
+  margin-top: 2px;
 }
 </style>

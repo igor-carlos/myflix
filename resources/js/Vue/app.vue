@@ -36,7 +36,6 @@ export default {
       axios
         .get("api/v1/series")
         .then((response) => {
-          console.log(response);
           this.series = response.data;
         })
         .catch((error) => {});

@@ -21,7 +21,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::get('/v1/series', [SeriesController::class, 'index']);
-
 Route::prefix('/v1/serie')->group(function () {
     Route::post('/', [SeriesController::class, 'store']);
     Route::get('/{id}', [SeriesController::class, 'show']);
@@ -34,6 +33,6 @@ Route::get('/v1/temporadas', [SeasonController::class, 'index']);
 Route::prefix('/v1/temporada')->group(function () {
     Route::post('/', [SeasonController::class, 'store']);
     Route::get('/{id}', [SeasonController::class, 'showBySerie']);
-    Route::patch('/{id}', [SeasonController::class, 'updateBySerie']);
+    Route::put('/{id}', [SeasonController::class, 'updateBySerie']);
     Route::delete('/{id}', [SeasonController::class, 'destroy']);
 });
