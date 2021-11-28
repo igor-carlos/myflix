@@ -17,7 +17,7 @@ class EpisodiosController extends Controller
      */
     public function index(): Response
     {
-        return response(Episodio:all(), 200);
+        return response(Episodio::all(), 200);
     }
 
     /**
@@ -29,7 +29,7 @@ class EpisodiosController extends Controller
     public function store(Request $request): Response
     {
         $request->validate(['temporada_id' => 'required']);
-        $request->validate(['numero' => 'required']);
+        $request->validate(['numero' => 'required|unique']);
         $request->validate(['nome' => 'required']);
         $episodioCadastrado = Episodio::create($request->all());
         return response($episodioCadastrado, 201);

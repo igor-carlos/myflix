@@ -39,10 +39,10 @@ export default {
           this.series = response.data;
         })
         .catch((error) => {
-            notify({
-                text: `Erro: ${error}`,
-                theme: "red",
-            });
+          notify({
+            text: `Erro: ${error}`,
+            theme: "red",
+          });
         });
     },
   },

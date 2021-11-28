@@ -4,9 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Serie;
+use App\Models\Temporada;
+use App\Models\Episodio;
 use Illuminate\Http\Response;
-
-use Illuminate\Support\Facades\DB;
 
 class SeriesController extends Controller
 {
@@ -17,7 +17,17 @@ class SeriesController extends Controller
      */
     public function index(): Response
     {
-        return response(Serie::all(), 200);
+        $series = Serie::all();
+        for ($i = 0; $i < count($series); $i++) {
+            $series[$i]->temporadas = Temporada::where('serie_id', '=', $series[$i]->id)->get();
+            $qtdeTemporadas = count($series[$i]->temporadas);
+            if ($qtdeTemporadas > 0) {
+                for ($y = 0; $y < $qtdeTemporadas; $y++) {
+                    $series[$i]->temporadas[$y]->episodios = Episodio::where('temporada_id', '=', $series[$i]->temporadas[$y]->id)->get();
+                }
+            }
+        }
+        return response($series, 200);
     }
 
     /**
