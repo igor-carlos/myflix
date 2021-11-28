@@ -20,6 +20,7 @@
     },
     "dependencies": {
         "v-tooltip": "^2.1.3",
-        "vue": "^2.6.14"
+        "vue": "^2.6.14",
+        "vue-resize": "^1.0.1"
     }
 }

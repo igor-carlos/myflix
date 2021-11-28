@@ -38,7 +38,12 @@ export default {
         .then((response) => {
           this.series = response.data;
         })
-        .catch((error) => {});
+        .catch((error) => {
+            notify({
+                text: `Erro: ${error}`,
+                theme: "red",
+            });
+        });
     },
   },
   created() {

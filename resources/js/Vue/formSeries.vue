@@ -115,6 +115,7 @@
                 <div class="label-season-input">
                   <label for="season-input">Temporada: </label>
                   <input
+                    id="season-input"
                     v-model="seasonNumber"
                     type="number"
                     placeholder="Número da temporada"
@@ -164,11 +165,9 @@ export default {
       this.serieToEditStatusStatus = serie.status;
     });
     this.$root.$on("editSerieEpisodeo", (serie) => {
+      /*
       this.showModalEditSerieEpisodeo = true;
-      this.serieToEditEpisodeoId = serie.id;
-      this.serieToEditEpisodeoName = serie.nome;
-      this.seasonNumber = serie.temporada;
-      this.episodeNumber = serie.episodeo;
+         */
     });
   },
   data: function () {
@@ -186,10 +185,6 @@ export default {
       serieToEditStatusName: "",
       serieToEditStatusStatus: "",
       showModalEditSerieEpisodeo: false,
-      serieToEditEpisodeoId: null,
-      serieToEditEpisodeoName: "",
-      episodeNumber: null,
-      seasonNumber: null,
     };
   },
   methods: {
@@ -212,6 +207,7 @@ export default {
           }
         })
         .catch((error) => {
+          console.log(error);
           if (erro.response.data == "422") {
             notify({
               text: "Necessário no minímo 4 letras para o nome da série",
@@ -356,39 +352,7 @@ export default {
       this.showModalEditSerieEpisodeo = false;
     },
     confirmSerieEpisodeoEdit() {
-      if (
-        !this.serieToEditEpisodeoId &&
-        !this.episodeNumber &&
-        !this.seasonNumber
-      ) {
-        notify({
-          text: "Não foi possível indentificar a série a ser editada",
-          theme: "red",
-        });
-        return;
-      }
-      axios
-        .put(`api/v1/temporada/${this.serieToEditEpisodeoId}`, {
-          episodeo: this.episodeNumber,
-          temporada: this.seasonNumber,
-        })
-        .then((response) => {
-          this.showModalEditSerieEpisodeo = false;
-          if (response.status == 200) {
-            notify({
-              text: "Episódeo alterado !",
-              theme: "green",
-            });
-            this.$emit("reloadlist");
-          }
-        })
-        .catch((error) => {
-          this.showModalEditSerieEpisodeo = false;
-          notify({
-            text: `Erro: ${error}`,
-            theme: "red",
-          });
-        });
+      // montar a lógica aq
     },
   },
 };

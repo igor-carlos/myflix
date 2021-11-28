@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Serie;
-use App\Models\Season;
 use Illuminate\Http\Response;
 
 use Illuminate\Support\Facades\DB;
@@ -18,11 +17,7 @@ class SeriesController extends Controller
      */
     public function index(): Response
     {
-        $series = DB::table('series')
-            ->join('seasons', 'series.id', '=', 'seasons.serie_id')
-            ->select('series.*', 'seasons.episodeo', 'seasons.temporada')
-            ->get();
-        return response($series, 200);
+        return response(Serie::all(), 200);
     }
 
     /**
@@ -33,11 +28,9 @@ class SeriesController extends Controller
      */
     public function store(Request $request): Response
     {
+        error_log($request);
         $request->validate(['nome' => 'required|min:5']);
         $serieCadastrada = Serie::create($request->all());
-        Season::create([
-            'serie_id' => $serieCadastrada->id,
-        ]);
         return response($serieCadastrada, 201);
     }
 
@@ -106,7 +99,7 @@ class SeriesController extends Controller
 
     /**
      * Atualiza o status da série no SGBD
-     * 
+     *
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
