@@ -42,10 +42,13 @@
         <div class="left-content-information">
           <p
             class="episodeo"
-            v-if="serie.last_episode_watched !== 0 && serie.status === 'não-assistido'"
+            v-if="
+              serie.last_episode_watched !== null &&
+              serie.status === 'não-assistido'
+            "
           >
             <i class="fas fa-film"></i>
-                Episódio: {{ serie.last_episode_watched }}
+            Episódio: {{ serie.last_episode_watched }}
           </p>
         </div>
         <div class="right-content-information">

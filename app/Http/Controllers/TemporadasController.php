@@ -27,8 +27,8 @@ class TemporadasController extends Controller
   public function store(Request $request): Response
   {
     $request->validate(['serie_id' => 'required']);
-    $request->validate(['numero' => 'required']);
-    $request->validate(['nome' => 'required']);
+    $request->validate(['numero' => 'required|unique:temporadas']);
+    $request->validate(['nome' => 'required|unique:temporadas']);
     $temporadaCadastrada = Temporada::create($request->all());
     return response($temporadaCadastrada, 201);
   }

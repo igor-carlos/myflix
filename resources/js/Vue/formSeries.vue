@@ -100,43 +100,120 @@
       <transition name="modal">
         <div class="modal-mask">
           <div class="modal-wrapper">
-            <div class="modal-container">
+            <div class="modal-container-lg">
               <div class="modal-body">
-                <div class="label-season-input">
-                  <label for="episode-input">Episódio:</label>
-                  <input
-                    id="episode-input"
-                    v-model="episodeNumber"
-                    type="number"
-                    placeholder="Número do episódio"
-                    required
-                  />
+                <div class="modal-body-temporadas">
+                  <div v-if="serieForEpisodioEditionTemporadas.length > 0">
+                    Temporadas e episódios:
+                    <div
+                      v-for="temporada in serieForEpisodioEditionTemporadas"
+                      :key="temporada.id"
+                    >
+                      <p class="temporada-p">
+                        {{ temporada.numero }} - {{ temporada.nome }}
+                      </p>
+                      <div v-if="temporada.episodios.length > 0">
+                        <div
+                          v-for="episodio in temporada.episodios"
+                          :key="episodio.id"
+                        >
+                          <p class="episodio-p">
+                            {{ episodio.numero }} - {{ episodio.nome }}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div v-else>
+                    <p>Não há nenhuma temporada cadastrada para essa série !</p>
+                  </div>
                 </div>
-                <div class="label-season-input">
-                  <label for="season-input">Temporada: </label>
-                  <input
-                    id="season-input"
-                    v-model="seasonNumber"
-                    type="number"
-                    placeholder="Número da temporada"
-                    required
-                  />
+                <div class="modal-body-form">
+                  <div class="create-temporada">
+                    <span class="span-input">Temporada: </span>
+                    <input
+                      class="input-tmep"
+                      id="create-temporada-numero-input"
+                      v-model="createTemporadaNumeroInputValue"
+                      type="number"
+                      min="1"
+                      placeholder="Número"
+                      required
+                    />
+                    <input
+                      class="input-tmep"
+                      id="create-temporada-nome-input"
+                      v-model="createTemporadaNomeInputValue"
+                      type="text"
+                      placeholder="Nome"
+                      required
+                    />
+                    <button
+                      @click="createSeasonForSerie"
+                      class="btn-input-tmep"
+                    >
+                      +
+                    </button>
+                  </div>
+                  <div
+                    v-if="serieForEpisodioEditionTemporadas.length > 0"
+                    class="create-episodio"
+                  >
+                    <span class="span-input">Episódio: </span>
+                    <select
+                      class="select-tmep"
+                      id="create-episodio-temporada-numero-input"
+                      v-model="serieForEpisodioEditionTemporadasSelectedId"
+                      type="number"
+                      min="1"
+                      placeholder="Número da temporada"
+                      required
+                    >
+                      <option
+                        v-for="temporada in serieForEpisodioEditionTemporadas"
+                        v-bind:value="temporada.id"
+                        :key="temporada.id"
+                      >
+                        {{ temporada.numero }} - {{ temporada.nome }}
+                      </option>
+                    </select>
+                    <input
+                      class="input-tmep"
+                      id="create-episodio-numero-input"
+                      v-model="createEpisodioNumeroInputValue"
+                      type="number"
+                      min="1"
+                      placeholder="Número"
+                      required
+                    />
+                    <input
+                      class="input-tmep"
+                      id="create-episodio-nome-input"
+                      v-model="createEpisodioNomeInputValue"
+                      type="text"
+                      placeholder="Nome"
+                      required
+                    />
+                    <button
+                      @click="createEpisodeForSerie"
+                      class="btn-input-tmep"
+                    >
+                      +
+                    </button>
+                  </div>
                 </div>
               </div>
               <div class="modal-footer">
                 <button
-                  class="modal-button-confirm"
-                  @click="confirmSerieEpisodeoEdit"
-                >
-                  Confirmar
-                </button>
-                <button
                   class="modal-button-cancel"
                   @click="cancelSerieEpisodeoEdit"
                 >
-                  Cancelar
+                  Fechar
                 </button>
               </div>
+              <span v-if="messageTmep.length > 0" class="span-warning">{{
+                messageTmep
+              }}</span>
             </div>
           </div>
         </div>
@@ -165,9 +242,9 @@ export default {
       this.serieToEditStatusStatus = serie.status;
     });
     this.$root.$on("editSerieEpisodeo", (serie) => {
-      /*
       this.showModalEditSerieEpisodeo = true;
-         */
+      this.serieForEpisodioEditionId = serie.id;
+      this.serieForEpisodioEditionTemporadas = serie.temporadas;
     });
   },
   data: function () {
@@ -184,7 +261,20 @@ export default {
       serieToEditStatusId: null,
       serieToEditStatusName: "",
       serieToEditStatusStatus: "",
+      messageTmep: "",
+
       showModalEditSerieEpisodeo: false,
+
+      serieForEpisodioEditionId: null,
+      serieForEpisodioEditionTemporadas: null,
+      serieForEpisodioEditionTemporadasSelectedId: null,
+
+      createTemporadaNumeroInputValue: null,
+      createTemporadaNomeInputValue: null,
+
+      createEpisodioNumeroTemporadaInputValue: null,
+      createEpisodioNumeroInputValue: null,
+      createEpisodioNomeInputValue: null,
     };
   },
   methods: {
@@ -348,11 +438,100 @@ export default {
           });
         });
     },
+    setMessageTmep(message) {
+      this.messageTmep = message;
+      setTimeout(() => (this.messageTmep = ""), 3000);
+    },
     cancelSerieEpisodeoEdit() {
       this.showModalEditSerieEpisodeo = false;
     },
-    confirmSerieEpisodeoEdit() {
-      // montar a lógica aq
+    createSeasonForSerie() {
+      if (!this.serieForEpisodioEditionId) {
+        this.setMessageTmep("Não foi possível achar a série a ser editada");
+        return;
+      }
+      if (
+        !this.createTemporadaNumeroInputValue &&
+        this.createTemporadaNumeroInputValue > 0
+      ) {
+        this.setMessageTmep(
+          "É necessário fornecer um número válido para criar uma temporada"
+        );
+        return;
+      }
+      if (!this.createTemporadaNomeInputValue) {
+        this.setMessageTmep(
+          "É necessário fornecer um nome para criar uma temporada"
+        );
+        return;
+      }
+
+      for (var i = 0; i < this.serieForEpisodioEditionTemporadas.length; i++) {
+        if (
+          this.serieForEpisodioEditionTemporadas[i].numero ==
+          this.createTemporadaNumeroInputValue
+        ) {
+          this.setMessageTmep(
+            "O número dessa temporada já existe, criação cancelada"
+          );
+          return;
+        }
+      }
+
+      axios
+        .post("api/v1/temporada", {
+          serie_id: this.serieForEpisodioEditionId,
+          numero: this.createTemporadaNumeroInputValue,
+          nome: this.createTemporadaNomeInputValue,
+        })
+        .then((response) => {
+          if (response.status == "201") {
+            notify({
+              text: "Temporada cadastrada com sucesso !",
+              theme: "green",
+            });
+            this.$emit("reloadlist");
+            this.showModalEditSerieEpisodeo = false;
+            this.serieForEpisodioEditionId = null;
+            this.createTemporadaNumeroInputValue = null;
+            this.createTemporadaNomeInputValue = null;
+          } else {
+            notify({
+              text: "Algo de inesperado ocorreu !",
+              theme: "red",
+            });
+          }
+        })
+        .catch((error) => {
+          notify({
+            text: `Erro: ${error}`,
+            theme: "red",
+          });
+        });
+    },
+    createEpisodeForSerie() {
+      if (!this.serieForEpisodioEditionTemporadasSelectedId) {
+        this.setMessageTmep(
+          "É necessário selecionar uma temporada para fazer o cadastro de um episódio"
+        );
+        return;
+      }
+      if (
+        !this.createEpisodioNumeroInputValue &&
+        this.createEpisodioNumeroInputValue > 0
+      ) {
+        this.setMessageTmep(
+          "É necessário fornecer um número válido para criar um episódio"
+        );
+        return;
+      }
+      if (!this.createEpisodioNomeInputValue) {
+        this.setMessageTmep(
+          "É necessário fornecer um nome para criar um episódio"
+        );
+        return;
+      }
+      let temporadaId = this.serieForEpisodioEditionTemporadasSelectedId;
     },
   },
 };
@@ -450,7 +629,7 @@ export default {
 
 .modal-mask {
   position: fixed;
-  z-index: 9998;
+  z-index: 100;
   top: 0;
   left: 0;
   width: 100%;
@@ -467,6 +646,19 @@ export default {
 
 .modal-container {
   width: 300px;
+  margin: 0px auto;
+  padding: 20px 30px;
+  background-color: #333;
+  color: white;
+  border-radius: 8px;
+  border: 2px solid rgb(185, 33, 33);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);
+  transition: all 0.3s ease;
+  font-family: "Epilogue", sans-serif;
+}
+
+.modal-container-lg {
+  width: 800px;
   margin: 0px auto;
   padding: 20px 30px;
   background-color: #333;
@@ -528,12 +720,63 @@ export default {
   cursor: pointer;
 }
 
-.label-season-input {
-  margin: 10px;
-  display: flex;
-  justify-content: space-between;
+.temporada-p {
+  text-align: start;
+  color: rgb(197, 64, 64);
 }
-.label-season-input label {
-  margin-top: 2px;
+
+.episodio-p {
+  text-align: start;
+  margin-left: 30px;
+  color: rgb(231, 98, 98);
+}
+
+.create-temporada {
+  margin: 5px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.create-episodio {
+  margin: 5px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.span-input {
+  width: 100%;
+  text-align: start;
+}
+
+.btn-input-tmep {
+  border-radius: 5px;
+  border-color: transparent;
+  cursor: pointer;
+  background-color: rgb(68, 163, 68);
+  color: white;
+}
+
+.btn-input-tmep:hover {
+  background-color: rgb(49, 128, 49);
+}
+
+.input-tmep {
+  border-radius: 5px;
+}
+
+.input-tmep:focus {
+  outline: none;
+}
+
+.select-tmep {
+  border-radius: 5px;
+}
+
+.span-warning {
+  color: rgb(195, 223, 37);
+}
+
+.modal-body-temporadas {
+  margin-bottom: 50px;
 }
 </style>

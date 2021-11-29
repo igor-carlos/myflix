@@ -155,7 +155,7 @@
 
         .tooltip {
             display: block !important;
-            z-index: 10000;
+            z-index: 101;
             font-family: "Epilogue", sans-serif;
             font-size: small;
         }

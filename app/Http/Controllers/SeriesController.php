@@ -19,11 +19,11 @@ class SeriesController extends Controller
     {
         $series = Serie::all();
         for ($i = 0; $i < count($series); $i++) {
-            $series[$i]->temporadas = Temporada::where('serie_id', '=', $series[$i]->id)->get();
+            $series[$i]->temporadas = Temporada::where('serie_id', '=', $series[$i]->id)->orderBy('numero')->get();
             $qtdeTemporadas = count($series[$i]->temporadas);
             if ($qtdeTemporadas > 0) {
                 for ($y = 0; $y < $qtdeTemporadas; $y++) {
-                    $series[$i]->temporadas[$y]->episodios = Episodio::where('temporada_id', '=', $series[$i]->temporadas[$y]->id)->get();
+                    $series[$i]->temporadas[$y]->episodios = Episodio::where('temporada_id', '=', $series[$i]->temporadas[$y]->id)->orderBy('numero')->get();
                 }
             }
         }
@@ -38,8 +38,9 @@ class SeriesController extends Controller
      */
     public function store(Request $request): Response
     {
+        $request->validate(['nome' => 'required|min:4']);
+        $request->last_episode_watched = "S0E0";
         error_log($request);
-        $request->validate(['nome' => 'required|min:5']);
         $serieCadastrada = Serie::create($request->all());
         return response($serieCadastrada, 201);
     }
