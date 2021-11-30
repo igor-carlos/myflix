@@ -39,7 +39,7 @@ Route::prefix('/v1/temporada')->group(function () {
 });
 
 Route::get('/v1/episodios', [EpisodiosController::class, 'index']);
-Route::prefix('/v1/episodios')->group(function () {
+Route::prefix('/v1/episodio')->group(function () {
     Route::post('/', [EpisodiosController::class, 'store']);
     Route::get('/{id}', [EpisodiosController::class, 'show']);
     Route::put('/{id}', [EpisodiosController::class, 'update']);

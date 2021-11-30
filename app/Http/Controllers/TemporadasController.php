@@ -26,9 +26,14 @@ class TemporadasController extends Controller
    */
   public function store(Request $request): Response
   {
+    error_log($request);
     $request->validate(['serie_id' => 'required']);
-    $request->validate(['numero' => 'required|unique:temporadas']);
-    $request->validate(['nome' => 'required|unique:temporadas']);
+    $request->validate(['numero' => 'required']);
+    $request->validate(['nome' => 'required']);
+    $episodio = Temporada::where('serie_id', '=', $request['serie_id'])->where('numero', '=', $request['numero'])->get();
+    if (count($episodio) > 0) {
+      return response("Temporada already exists", 409);
+    }
     $temporadaCadastrada = Temporada::create($request->all());
     return response($temporadaCadastrada, 201);
   }

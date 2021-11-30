@@ -29,8 +29,12 @@ class EpisodiosController extends Controller
     public function store(Request $request): Response
     {
         $request->validate(['temporada_id' => 'required']);
-        $request->validate(['numero' => 'required|unique']);
+        $request->validate(['numero' => 'required']);
         $request->validate(['nome' => 'required']);
+        $episodio = Episodio::where('temporada_id', '=', $request['temporada_id'])->where('numero', '=', $request['numero'])->get();
+        if (count($episodio) > 0) {
+            return response("Episodio already exists", 409);
+        }
         $episodioCadastrado = Episodio::create($request->all());
         return response($episodioCadastrado, 201);
     }

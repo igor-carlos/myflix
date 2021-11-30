@@ -104,13 +104,14 @@
               <div class="modal-body">
                 <div class="modal-body-temporadas">
                   <div v-if="serieForEpisodioEditionTemporadas.length > 0">
-                    Temporadas e episódios:
+                    <h3>Temporadas (TP) e episódios (EP):</h3>
+                    <br /><br />
                     <div
                       v-for="temporada in serieForEpisodioEditionTemporadas"
                       :key="temporada.id"
                     >
                       <p class="temporada-p">
-                        {{ temporada.numero }} - {{ temporada.nome }}
+                        TP{{ temporada.numero }} - {{ temporada.nome }}
                       </p>
                       <div v-if="temporada.episodios.length > 0">
                         <div
@@ -118,7 +119,7 @@
                           :key="episodio.id"
                         >
                           <p class="episodio-p">
-                            {{ episodio.numero }} - {{ episodio.nome }}
+                            EP{{ episodio.numero }} - {{ episodio.nome }}
                           </p>
                         </div>
                       </div>
@@ -128,7 +129,10 @@
                     <p>Não há nenhuma temporada cadastrada para essa série !</p>
                   </div>
                 </div>
-                <div class="modal-body-form">
+                <p class="title-modal-body-form">
+                  Cadastro de temporadas e séries
+                </p>
+                <div class="modal-body-form-temporada-episodio">
                   <div class="create-temporada">
                     <span class="span-input">Temporada: </span>
                     <input
@@ -150,9 +154,9 @@
                     />
                     <button
                       @click="createSeasonForSerie"
-                      class="btn-input-tmep"
+                      class="btn-input-tmep-positive"
                     >
-                      +
+                      <i class="fas fa-plus-circle"></i>
                     </button>
                   </div>
                   <div
@@ -196,9 +200,94 @@
                     />
                     <button
                       @click="createEpisodeForSerie"
-                      class="btn-input-tmep"
+                      class="btn-input-tmep-positive"
                     >
-                      +
+                      <i class="fas fa-plus-circle"></i>
+                    </button>
+                  </div>
+                </div>
+                <br />
+                <p class="title-modal-body-form">
+                  Edição e exclusão de temporadas e séries
+                </p>
+                <div class="modal-body-form-temporada-episodio">
+                  <div class="create-temporada">
+                    <span class="span-input">Temporada: </span>
+                    <select
+                      class="select-tmep"
+                      v-model="temporadaToDeleteId"
+                      required
+                    >
+                      <option
+                        v-for="temporada in serieForEpisodioEditionTemporadas"
+                        v-bind:value="temporada.id"
+                        :key="temporada.id"
+                      >
+                        TP{{ temporada.numero }} - {{ temporada.nome }}
+                      </option>
+                    </select>
+                    <button
+                      @click="deleteSeason"
+                      class="btn-input-tmep-negative"
+                    >
+                      <i class="fas fa-minus-circle"></i>
+                    </button>
+                    <button @click="editSeason" class="btn-input-tmep-edit">
+                      <i class="fas fa-edit"></i>
+                    </button>
+                  </div>
+                  <div
+                    v-if="serieForEpisodioEditionTemporadas.length > 0"
+                    class="create-episodio"
+                  >
+                    <span class="span-input">Episódio: </span>
+                    <select
+                      class="select-tmep"
+                      v-model="temporadaToDeleteId"
+                      required
+                    >
+                      <option
+                        v-for="temporada in serieForEpisodioEditionTemporadas"
+                        v-bind:value="temporada.id"
+                        :key="temporada.id"
+                      >
+                        TP{{ temporada.numero }} - {{ temporada.nome }}
+                      </option>
+                    </select>
+                    <button
+                      @click="deleteSeason"
+                      class="btn-input-tmep-negative"
+                    >
+                      <i class="fas fa-minus-circle"></i>
+                    </button>
+                    <button @click="editSeason" class="btn-input-tmep-edit">
+                      <i class="fas fa-edit"></i>
+                    </button>
+                  </div>
+                </div>
+                <br />
+                <p class="title-modal-body-form">Ultimo episódio assistido</p>
+                <div class="modal-body-form-temporada-episodio">
+                  <div class="create-temporada">
+                    <span class="span-input">Episódio: </span>
+                    <select
+                      class="select-tmep"
+                      v-model="temporadaToDeleteId"
+                      required
+                    >
+                      <option
+                        v-for="temporada in serieForEpisodioEditionTemporadas"
+                        v-bind:value="temporada.id"
+                        :key="temporada.id"
+                      >
+                        TP{{ temporada.numero }} - {{ temporada.nome }}
+                      </option>
+                    </select>
+                    <button
+                      @click="deleteSeason"
+                      class="btn-input-tmep-negative"
+                    >
+                      <i class="fas fa-check-circle"></i>
                     </button>
                   </div>
                 </div>
@@ -262,16 +351,12 @@ export default {
       serieToEditStatusName: "",
       serieToEditStatusStatus: "",
       messageTmep: "",
-
       showModalEditSerieEpisodeo: false,
-
       serieForEpisodioEditionId: null,
       serieForEpisodioEditionTemporadas: null,
       serieForEpisodioEditionTemporadasSelectedId: null,
-
       createTemporadaNumeroInputValue: null,
       createTemporadaNomeInputValue: null,
-
       createEpisodioNumeroTemporadaInputValue: null,
       createEpisodioNumeroInputValue: null,
       createEpisodioNomeInputValue: null,
@@ -297,7 +382,6 @@ export default {
           }
         })
         .catch((error) => {
-          console.log(error);
           if (erro.response.data == "422") {
             notify({
               text: "Necessário no minímo 4 letras para o nome da série",
@@ -305,7 +389,7 @@ export default {
             });
           }
           notify({
-            text: `Erro: ${error}`,
+            text: error,
             theme: "red",
           });
         });
@@ -371,7 +455,7 @@ export default {
         })
         .catch((error) => {
           notify({
-            text: `Erro: ${error}`,
+            text: error,
             theme: "red",
           });
         });
@@ -402,7 +486,7 @@ export default {
         .catch((error) => {
           this.showModalDeleteSerie = false;
           notify({
-            text: `Erro: ${error}`,
+            text: error,
             theme: "red",
           });
         });
@@ -433,7 +517,7 @@ export default {
         .catch((error) => {
           this.showModalEditSerieStatus = false;
           notify({
-            text: `Erro: ${error}`,
+            text: error,
             theme: "red",
           });
         });
@@ -465,19 +549,15 @@ export default {
         );
         return;
       }
-
       for (var i = 0; i < this.serieForEpisodioEditionTemporadas.length; i++) {
         if (
           this.serieForEpisodioEditionTemporadas[i].numero ==
           this.createTemporadaNumeroInputValue
         ) {
-          this.setMessageTmep(
-            "O número dessa temporada já existe, criação cancelada"
-          );
+          this.setMessageTmep("O número dessa temporada já existe");
           return;
         }
       }
-
       axios
         .post("api/v1/temporada", {
           serie_id: this.serieForEpisodioEditionId,
@@ -504,7 +584,7 @@ export default {
         })
         .catch((error) => {
           notify({
-            text: `Erro: ${error}`,
+            text: error,
             theme: "red",
           });
         });
@@ -532,6 +612,65 @@ export default {
         return;
       }
       let temporadaId = this.serieForEpisodioEditionTemporadasSelectedId;
+      let indexOfTemporada = null;
+      for (var i = 0; i < this.serieForEpisodioEditionTemporadas.length; i++) {
+        if (this.serieForEpisodioEditionTemporadas[i].id === temporadaId) {
+          indexOfTemporada = i;
+        }
+      }
+      if (indexOfTemporada === null) {
+        this.setMessageTmep(
+          "Não foi possível encontrar a temporada que deseja cadastrar um episódio"
+        );
+        return;
+      }
+      for (
+        var i = 0;
+        i <
+        this.serieForEpisodioEditionTemporadas[indexOfTemporada].episodios
+          .length;
+        i++
+      ) {
+        if (
+          this.serieForEpisodioEditionTemporadas[indexOfTemporada].episodios[i]
+            .numero == this.createEpisodioNumeroInputValue
+        ) {
+          this.setMessageTmep(
+            "O número desse episódio já existe nessa temporada"
+          );
+          return;
+        }
+      }
+      axios
+        .post("api/v1/episodio", {
+          temporada_id: temporadaId,
+          numero: this.createEpisodioNumeroInputValue,
+          nome: this.createEpisodioNomeInputValue,
+        })
+        .then((response) => {
+          if (response.status == "201") {
+            notify({
+              text: "Episódio cadastrado com sucesso !",
+              theme: "green",
+            });
+            this.$emit("reloadlist");
+            this.showModalEditSerieEpisodeo = false;
+            this.serieForEpisodioEditionTemporadasSelectedId = null;
+            this.createEpisodioNumeroInputValue = null;
+            this.createEpisodioNomeInputValue = null;
+          } else {
+            notify({
+              text: "Algo de inesperado ocorreu !",
+              theme: "red",
+            });
+          }
+        })
+        .catch((error) => {
+          notify({
+            text: error,
+            theme: "red",
+          });
+        });
     },
   },
 };
@@ -748,11 +887,30 @@ export default {
   text-align: start;
 }
 
-.btn-input-tmep {
+.btn-input-tmep-positive {
+  margin-left: 5px;
   border-radius: 5px;
   border-color: transparent;
   cursor: pointer;
   background-color: rgb(68, 163, 68);
+  color: white;
+}
+
+.btn-input-tmep-negative {
+  margin-left: 5px;
+  border-radius: 5px;
+  border-color: transparent;
+  cursor: pointer;
+  background-color: rgb(151, 39, 39);
+  color: white;
+}
+
+.btn-input-tmep-edit {
+  margin-left: 5px;
+  border-radius: 5px;
+  border-color: transparent;
+  cursor: pointer;
+  background-color: rgb(214, 180, 27);
   color: white;
 }
 
@@ -778,5 +936,14 @@ export default {
 
 .modal-body-temporadas {
   margin-bottom: 50px;
+}
+
+.modal-body-form-temporada-episodio {
+  padding: 10px;
+  border-top: 1px solid white;
+}
+
+.title-modal-body-form {
+  text-align: start;
 }
 </style>

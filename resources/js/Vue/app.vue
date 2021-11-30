@@ -40,7 +40,7 @@ export default {
         })
         .catch((error) => {
           notify({
-            text: `Erro: ${error}`,
+            text: `${error}`,
             theme: "red",
           });
         });
