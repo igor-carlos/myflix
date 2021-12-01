@@ -207,10 +207,96 @@
                   </div>
                 </div>
                 <br />
-                <p class="title-modal-body-form">
+                <p
+                  v-if="editTempEp == 'editTemp'"
+                  class="title-modal-body-form"
+                >
+                  Edição de temporada
+                </p>
+                <p v-if="editTempEp == 'editEp'" class="title-modal-body-form">
+                  Edição de série
+                </p>
+                <div
+                  v-if="editTempEp == 'editTemp' || editTempEp == 'editEp'"
+                  class="modal-body-form-temporada-episodio"
+                >
+                  <div v-if="editTempEp == 'editTemp'" class="create-temporada">
+                    <span class="span-input">Temporada: </span>
+                    <input
+                      class="input-tmep"
+                      id="create-temporada-numero-input"
+                      v-model="tempEditNumero"
+                      type="number"
+                      min="1"
+                      placeholder="Número"
+                      required
+                    />
+                    <input
+                      class="input-tmep"
+                      id="create-temporada-nome-input"
+                      v-model="tempEditNome"
+                      type="text"
+                      placeholder="Nome"
+                      required
+                    />
+                    <button
+                      @click="confirmEditTemp"
+                      class="btn-input-tmep-update"
+                    >
+                      <i class="fas fa-check-circle"></i>
+                    </button>
+                  </div>
+                  <div v-if="editTempEp == 'editEp'" class="create-episodio">
+                    <span class="span-input">Episódio: </span>
+                    <select
+                      class="select-tmep"
+                      id="create-episodio-temporada-numero-input"
+                      v-model="epEditTempId"
+                      type="number"
+                      min="1"
+                      placeholder="Número da temporada"
+                      required
+                    >
+                      <option
+                        v-for="temporada in serieTemporadas"
+                        v-bind:value="temporada.id"
+                        :key="temporada.id"
+                      >
+                        {{ temporada.numero }} - {{ temporada.nome }}
+                      </option>
+                    </select>
+                    <input
+                      class="input-tmep"
+                      id="create-episodio-numero-input"
+                      v-model="epEditNumero"
+                      type="number"
+                      min="1"
+                      placeholder="Número"
+                      required
+                    />
+                    <input
+                      class="input-tmep"
+                      id="create-episodio-nome-input"
+                      v-model="epEditNome"
+                      type="text"
+                      placeholder="Nome"
+                      required
+                    />
+                    <button
+                      @click="confirmEditEp"
+                      class="btn-input-tmep-update"
+                    >
+                      <i class="fas fa-check-circle"></i>
+                    </button>
+                  </div>
+                </div>
+                <p v-if="editTempEp == 'cad'" class="title-modal-body-form">
                   Edição e exclusão de temporadas e séries
                 </p>
-                <div class="modal-body-form-temporada-episodio">
+                <div
+                  v-if="editTempEp == 'cad'"
+                  class="modal-body-form-temporada-episodio"
+                >
                   <div class="create-temporada">
                     <span class="span-input">Temporada: </span>
                     <select
@@ -339,6 +425,8 @@ export default {
         for (var y = 0; y < this.serieTemporadas[i].episodios.length; y++) {
           this.serieEpisodios.push({
             serieId: serie.id,
+            tempId: this.serieTemporadas[i].id,
+            tempNumero: this.serieTemporadas[i].numero,
             nomeToShow: `TP${("0" + this.serieTemporadas[i].numero).slice(
               -2
             )}EP${this.serieTemporadas[i].episodios[y].numero}`,
@@ -376,6 +464,13 @@ export default {
       episodioHandle: null,
       serieEpisodios: null,
       lastEpisodioHandle: null,
+      editTempEp: "cad",
+      tempEditId: null,
+      tempEditNumero: null,
+      tempEditNome: null,
+      epEditTempId: null,
+      epEditNumero: null,
+      epEditNome: null,
     };
   },
   methods: {
@@ -750,10 +845,47 @@ export default {
         });
     },
     editTemporada() {
-      console.log(this.temporadaHandle);
+      this.editTempEp = "editTemp";
+      this.tempEditId = this.temporadaHandle.id;
+      this.tempEditNumero = this.temporadaHandle.numero;
+      this.tempEditNome = this.temporadaHandle.nome;
+    },
+    confirmEditTemp() {
+      axios
+        .put(`api/v1/temporada/${this.tempEditId}`, {
+          numero: this.tempEditNumero,
+          nome: this.tempEditNome,
+        })
+        .then((response) => {
+          this.editTempEp = "cad";
+          this.temporadaHandle = null;
+          this.showModalEditSerieEpisodeo = false;
+          if (response.status == 200) {
+            notify({
+              text: "Edição realizada com sucesso !",
+              theme: "green",
+            });
+            this.$emit("reloadlist");
+          }
+        })
+        .catch((error) => {
+          notify({
+            text: error,
+            theme: "red",
+          });
+        });
     },
     editEpisodio() {
-      console.log(this.episodioHandle);
+      this.editTempEp = "editEp";
+      this.epEditId = this.episodioHandle.epProps.id;
+      this.epEditTempId = this.episodioHandle.tempId;
+      this.epEditNumero = this.episodioHandle.epProps.numero;
+      this.epEditNome = this.episodioHandle.epProps.nom;
+    },
+    confirmEditEp() {
+      // falta fazer aq
+      console.log("oi");
+      this.editTempEp = "cad";
     },
     lastEpisodeWhatched() {
       if (!this.lastEpisodioHandle) {
@@ -794,282 +926,5 @@ export default {
 </script>
 
 <style scoped>
-.container-form {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  width: 100%;
-  justify-content: center;
-  text-align: center;
-  margin-top: 20px;
-  margin-bottom: 30px;
-}
-
-.container-input input {
-  width: 700px;
-  padding: 12px 20px;
-  margin: 5px 0;
-  box-sizing: border-box;
-  border-radius: 5px;
-  font-family: "Epilogue", sans-serif;
-  font-weight: bold;
-}
-
-.btn-register {
-  padding: 12px 20px;
-  cursor: pointer;
-  color: white;
-  background-color: rgb(185, 33, 33);
-  border-radius: 5px;
-  border-color: transparent;
-  font-family: "Epilogue", sans-serif;
-  font-weight: bold;
-  letter-spacing: 1px;
-}
-
-.btn-register:hover {
-  background-color: rgb(112, 22, 22);
-}
-
-.btn-save-edit {
-  padding: 12px 20px;
-  cursor: pointer;
-  color: rgb(185, 33, 33);
-  background-color: white;
-  border-radius: 5px;
-  border-color: transparent;
-  font-family: "Epilogue", sans-serif;
-  font-weight: bold;
-  letter-spacing: 1px;
-}
-
-.btn-save-edit:hover {
-  background-color: rgb(189, 189, 189);
-}
-
-.container-others {
-  width: 700px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: row;
-}
-
-.container-others select {
-  width: 100%;
-  padding: 12px 20px;
-  margin-right: 5px;
-  box-sizing: border-box;
-  border-radius: 5px;
-  font-family: "Epilogue", sans-serif;
-  font-weight: bold;
-  color: rgb(112, 112, 112);
-}
-
-.container-others select option {
-  font-family: "Epilogue", sans-serif;
-  font-weight: bold;
-  font-size: 16px;
-  color: rgb(112, 112, 112);
-}
-
-.voerro-notification {
-  margin: 0.5rem 0;
-  padding: 1rem;
-  border-radius: 0.3rem;
-  filter: opacity(90%);
-  font-family: "Epilogue", sans-serif;
-  color: white;
-}
-
-.modal-mask {
-  position: fixed;
-  z-index: 100;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.8);
-  display: table;
-  transition: opacity 0.3s ease;
-}
-
-.modal-wrapper {
-  display: table-cell;
-  vertical-align: middle;
-}
-
-.modal-container {
-  width: 300px;
-  margin: 0px auto;
-  padding: 20px 30px;
-  background-color: #333;
-  color: white;
-  border-radius: 8px;
-  border: 2px solid rgb(185, 33, 33);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);
-  transition: all 0.3s ease;
-  font-family: "Epilogue", sans-serif;
-}
-
-.modal-container-lg {
-  width: 800px;
-  margin: 0px auto;
-  padding: 20px 30px;
-  background-color: #333;
-  color: white;
-  border-radius: 8px;
-  border: 2px solid rgb(185, 33, 33);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);
-  transition: all 0.3s ease;
-  font-family: "Epilogue", sans-serif;
-}
-
-.modal-body {
-  margin: 20px 0;
-}
-
-.modal-enter {
-  opacity: 0;
-}
-
-.modal-leave-active {
-  opacity: 0;
-}
-
-.modal-enter .modal-container,
-.modal-leave-active .modal-container {
-  -webkit-transform: scale(1.1);
-  transform: scale(1.1);
-}
-
-.modal-button-confirm {
-  background-color: rgb(68, 163, 68);
-  color: white;
-  font-family: "Epilogue", sans-serif;
-  font-weight: bold;
-  padding: 8px 10px 8px 10px;
-  border-radius: 5px;
-  border: none;
-  margin: 5px;
-}
-
-.modal-button-confirm:hover {
-  background-color: rgb(47, 139, 47);
-  cursor: pointer;
-}
-
-.modal-button-cancel {
-  background-color: rgb(185, 33, 33);
-  color: white;
-  font-family: "Epilogue", sans-serif;
-  font-weight: bold;
-  padding: 8px 10px 8px 10px;
-  border-radius: 5px;
-  border: none;
-  margin: 5px;
-}
-
-.modal-button-cancel:hover {
-  background-color: rgb(141, 38, 38);
-  cursor: pointer;
-}
-
-.temporada-p {
-  text-align: start;
-  color: rgb(197, 64, 64);
-}
-
-.episodio-p {
-  text-align: start;
-  margin-left: 30px;
-  color: rgb(231, 98, 98);
-}
-
-.create-temporada {
-  margin: 5px;
-  display: flex;
-  justify-content: flex-end;
-}
-
-.create-episodio {
-  margin: 5px;
-  display: flex;
-  justify-content: flex-end;
-}
-
-.span-input {
-  width: 100%;
-  text-align: start;
-}
-
-.btn-input-tmep-positive {
-  margin-left: 5px;
-  border-radius: 5px;
-  border-color: transparent;
-  cursor: pointer;
-  background-color: rgb(68, 163, 68);
-  color: white;
-}
-
-.btn-input-tmep-negative {
-  margin-left: 5px;
-  border-radius: 5px;
-  border-color: transparent;
-  cursor: pointer;
-  background-color: rgb(151, 39, 39);
-  color: white;
-}
-
-.btn-input-tmep-edit {
-  margin-left: 5px;
-  border-radius: 5px;
-  border-color: transparent;
-  cursor: pointer;
-  background-color: rgb(214, 180, 27);
-  color: white;
-}
-
-.btn-input-tmep-update {
-  margin-left: 5px;
-  border-radius: 5px;
-  border-color: transparent;
-  cursor: pointer;
-  background-color: rgb(63, 114, 192);
-  color: white;
-}
-
-.btn-input-tmep:hover {
-  background-color: rgb(49, 128, 49);
-}
-
-.input-tmep {
-  border-radius: 5px;
-}
-
-.input-tmep:focus {
-  outline: none;
-}
-
-.select-tmep {
-  border-radius: 5px;
-}
-
-.span-warning {
-  color: rgb(195, 223, 37);
-}
-
-.modal-body-temporadas {
-  margin-bottom: 50px;
-}
-
-.modal-body-form-temporada-episodio {
-  padding: 10px;
-  border-top: 1px solid white;
-}
-
-.title-modal-body-form {
-  text-align: start;
-}
+@import "./styles/formSeries.css";
 </style>
