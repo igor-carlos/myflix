@@ -106,7 +106,7 @@ class TemporadasController extends Controller
       return response('Not found', 404);
     }
 
-    $temporada =  Temporada::where('serie_id', '=', $id)->firstOrFail();
+    $temporada = Temporada::find($id);
 
     if ($temporada == null) {
       return response('No content', 204);

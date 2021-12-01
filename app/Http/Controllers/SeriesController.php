@@ -108,6 +108,29 @@ class SeriesController extends Controller
         return response($serie, 200);
     }
 
+    public function updateLastEpisode(Request $request, $id): Response
+    {
+        error_log($id);
+        $id = filter_var($id, FILTER_VALIDATE_INT);
+        if ($id === false) {
+            return response("Not found", 404);
+        }
+
+        $serie = Serie::find($id);
+
+        if ($serie == null) {
+            return response('No content', 204);
+        }
+
+        if (isset($request['lastEpisode'])) {
+            $serie->last_episode_watched = $request['lastEpisode'];
+        }
+
+        $serie->save();
+
+        return response($serie, 200);
+    }
+
     /**
      * Atualiza o status da série no SGBD
      *

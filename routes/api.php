@@ -26,6 +26,7 @@ Route::prefix('/v1/serie')->group(function () {
     Route::post('/', [SeriesController::class, 'store']);
     Route::get('/{id}', [SeriesController::class, 'show']);
     Route::patch('/{id}', [SeriesController::class, 'update']);
+    Route::patch('/last-episode/{id}', [SeriesController::class, 'updateLastEpisode']);
     Route::put('/{id}/status', [SeriesController::class, 'status']);
     Route::delete('/{id}', [SeriesController::class, 'destroy']);
 });
