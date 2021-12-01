@@ -5,9 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Season extends Model
+class Episodio extends Model
 {
   use HasFactory;
 
-  protected $fillable = ['serie_id', 'episodeo', 'temporada'];
+  protected $fillable = ['temporada_id', 'numero', 'nome'];
 }

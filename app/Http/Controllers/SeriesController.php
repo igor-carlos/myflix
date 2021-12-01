@@ -4,10 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Serie;
-use App\Models\Season;
+use App\Models\Temporada;
+use App\Models\Episodio;
 use Illuminate\Http\Response;
-
-use Illuminate\Support\Facades\DB;
 
 class SeriesController extends Controller
 {
@@ -18,10 +17,16 @@ class SeriesController extends Controller
      */
     public function index(): Response
     {
-        $series = DB::table('series')
-            ->join('seasons', 'series.id', '=', 'seasons.serie_id')
-            ->select('series.*', 'seasons.episodeo', 'seasons.temporada')
-            ->get();
+        $series = Serie::all();
+        for ($i = 0; $i < count($series); $i++) {
+            $series[$i]->temporadas = Temporada::where('serie_id', '=', $series[$i]->id)->orderBy('numero')->get();
+            $qtdeTemporadas = count($series[$i]->temporadas);
+            if ($qtdeTemporadas > 0) {
+                for ($y = 0; $y < $qtdeTemporadas; $y++) {
+                    $series[$i]->temporadas[$y]->episodios = Episodio::where('temporada_id', '=', $series[$i]->temporadas[$y]->id)->orderBy('numero')->get();
+                }
+            }
+        }
         return response($series, 200);
     }
 
@@ -33,11 +38,10 @@ class SeriesController extends Controller
      */
     public function store(Request $request): Response
     {
-        $request->validate(['nome' => 'required|min:5']);
+        $request->validate(['nome' => 'required|min:4']);
+        $request->last_episode_watched = "S0E0";
+        error_log($request);
         $serieCadastrada = Serie::create($request->all());
-        Season::create([
-            'serie_id' => $serieCadastrada->id,
-        ]);
         return response($serieCadastrada, 201);
     }
 
@@ -104,9 +108,32 @@ class SeriesController extends Controller
         return response($serie, 200);
     }
 
+    public function updateLastEpisode(Request $request, $id): Response
+    {
+        error_log($id);
+        $id = filter_var($id, FILTER_VALIDATE_INT);
+        if ($id === false) {
+            return response("Not found", 404);
+        }
+
+        $serie = Serie::find($id);
+
+        if ($serie == null) {
+            return response('No content', 204);
+        }
+
+        if (isset($request['lastEpisode'])) {
+            $serie->last_episode_watched = $request['lastEpisode'];
+        }
+
+        $serie->save();
+
+        return response($serie, 200);
+    }
+
     /**
      * Atualiza o status da série no SGBD
-     * 
+     *
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */

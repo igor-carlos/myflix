@@ -9,28 +9,28 @@
         <div class="title-itens">
           <div
             v-if="serie.status == 'não-assistido'"
-            v-tooltip="'Alterar episódio'"
+            v-tooltip="'Editar episódios e temporadas'"
             class="edit-serie-episodeo"
             v-on:click="editSerieEpisodeo(serie)"
           >
             <i class="fas fa-film"></i>
           </div>
           <div
-            v-tooltip="'Alterar Status'"
+            v-tooltip="'Alterar status da série'"
             class="edit-serie-status"
             v-on:click="editSerieStatus(serie)"
           >
             <i class="fas fa-check-square"></i>
           </div>
           <div
-            v-tooltip="'Editar'"
+            v-tooltip="'Editar série'"
             class="edit-serie"
             v-on:click="editSerie(serie)"
           >
             <i class="fas fa-edit"></i>
           </div>
           <div
-            v-tooltip="'Excluir'"
+            v-tooltip="'Excluir série'"
             class="delete-serie"
             v-on:click="deleteSerie(serie)"
           >
@@ -42,17 +42,13 @@
         <div class="left-content-information">
           <p
             class="episodeo"
-            v-if="serie.episodeo && serie.status == 'não-assistido'"
+            v-if="
+              serie.last_episode_watched !== null &&
+              serie.status === 'não-assistido'
+            "
           >
             <i class="fas fa-film"></i>
-            Episódio: {{ serie.episodeo }}
-          </p>
-          <p
-            class="temporada"
-            v-if="serie.temporada && serie.status == 'não-assistido'"
-          >
-            <i class="fas fa-layer-group"></i>
-            Temporada: {{ serie.temporada }}
+            Episódio: {{ serie.last_episode_watched }}
           </p>
         </div>
         <div class="right-content-information">

@@ -14,8 +14,8 @@ class AlterSeriesTable extends Migration
     public function up()
     {
         Schema::table('series', function (Blueprint $table) {
-            $table->string('categoria')->nullable();
-            $table->string('streaming')->nullable();
+            $table->string('categoria')->after('status')->nullable();
+            $table->string('streaming')->after('categoria')->nullable();
         });
     }
 

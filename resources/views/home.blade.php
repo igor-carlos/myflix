@@ -25,12 +25,6 @@
         applet,
         object,
         iframe,
-        h1,
-        h2,
-        h3,
-        h4,
-        h5,
-        h6,
         p,
         blockquote,
         pre,
@@ -155,7 +149,7 @@
 
         .tooltip {
             display: block !important;
-            z-index: 10000;
+            z-index: 101;
             font-family: "Epilogue", sans-serif;
             font-size: small;
         }

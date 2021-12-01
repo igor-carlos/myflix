@@ -3,10 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Season;
+use App\Models\Temporada;
 use Illuminate\Http\Response;
 
-class SeasonController extends Controller
+class TemporadasController extends Controller
 {
   /**
    * Lista todas os registros encontrados
@@ -15,7 +15,7 @@ class SeasonController extends Controller
    */
   public function index(): Response
   {
-    return response(Season::all(), 200);
+    return response(Temporada::all(), 200);
   }
 
   /**
@@ -26,10 +26,15 @@ class SeasonController extends Controller
    */
   public function store(Request $request): Response
   {
+    error_log($request);
     $request->validate(['serie_id' => 'required']);
-    $request->validate(['episodeo' => 'required']);
-    $request->validate(['temporada' => 'required']);
-    $temporadaCadastrada = Season::create($request->all());
+    $request->validate(['numero' => 'required']);
+    $request->validate(['nome' => 'required']);
+    $episodio = Temporada::where('serie_id', '=', $request['serie_id'])->where('numero', '=', $request['numero'])->get();
+    if (count($episodio) > 0) {
+      return response("Temporada already exists", 409);
+    }
+    $temporadaCadastrada = Temporada::create($request->all());
     return response($temporadaCadastrada, 201);
   }
 
@@ -46,8 +51,8 @@ class SeasonController extends Controller
       return response("Not found", 404);
     }
 
-    $season =  Season::where('serie_id', '=', $id)->firstOrFail();
-    return response($season, 200);
+    $temporada =  Temporada::where('serie_id', '=', $id)->firstOrFail();
+    return response($temporada, 200);
   }
 
   /**
@@ -65,27 +70,27 @@ class SeasonController extends Controller
     }
 
     $request->validate([
-      'episodeo' => 'min:1',
-      'temporada' => 'min:1'
+      'numero' => 'min:1',
+      'nome' => 'min:1'
     ]);
 
-    $season =  Season::where('serie_id', '=', $id)->firstOrFail();
+    $temporada =  Temporada::where('serie_id', '=', $id)->firstOrFail();
 
-    if ($season == null) {
+    if ($temporada == null) {
       return response('No content', 204);
     }
 
-    if (isset($request['episodeo'])) {
-      $season->episodeo = $request['episodeo'];
+    if (isset($request['numero'])) {
+      $temporada->numero = $request['numero'];
     }
 
-    if (isset($request['temporada'])) {
-      $season->temporada = $request['temporada'];
+    if (isset($request['nome'])) {
+      $temporada->nome = $request['nome'];
     }
 
-    $season->save();
+    $temporada->save();
 
-    return response($season, 200);
+    return response($temporada, 200);
   }
 
   /**
@@ -101,13 +106,13 @@ class SeasonController extends Controller
       return response('Not found', 404);
     }
 
-    $season =  Season::where('serie_id', '=', $id)->firstOrFail();
+    $temporada = Temporada::find($id);
 
-    if ($season == null) {
+    if ($temporada == null) {
       return response('No content', 204);
     }
 
-    Season::destroy($id);
+    temporada::destroy($id);
 
     return response('Ok', 200);
   }

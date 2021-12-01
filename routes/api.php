@@ -1,7 +1,8 @@
 <?php
 
 use App\Http\Controllers\SeriesController;
-use App\Http\Controllers\SeasonController;
+use App\Http\Controllers\TemporadasController;
+use App\Http\Controllers\EpisodiosController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -25,14 +26,23 @@ Route::prefix('/v1/serie')->group(function () {
     Route::post('/', [SeriesController::class, 'store']);
     Route::get('/{id}', [SeriesController::class, 'show']);
     Route::patch('/{id}', [SeriesController::class, 'update']);
+    Route::patch('/last-episode/{id}', [SeriesController::class, 'updateLastEpisode']);
     Route::put('/{id}/status', [SeriesController::class, 'status']);
     Route::delete('/{id}', [SeriesController::class, 'destroy']);
 });
 
-Route::get('/v1/temporadas', [SeasonController::class, 'index']);
+Route::get('/v1/temporadas', [TemporadasController::class, 'index']);
 Route::prefix('/v1/temporada')->group(function () {
-    Route::post('/', [SeasonController::class, 'store']);
-    Route::get('/{id}', [SeasonController::class, 'showBySerie']);
-    Route::put('/{id}', [SeasonController::class, 'updateBySerie']);
-    Route::delete('/{id}', [SeasonController::class, 'destroy']);
+    Route::post('/', [TemporadasController::class, 'store']);
+    Route::get('/{id}', [TemporadasController::class, 'showBySerie']);
+    Route::put('/{id}', [TemporadasController::class, 'updateBySerie']);
+    Route::delete('/{id}', [TemporadasController::class, 'destroy']);
+});
+
+Route::get('/v1/episodios', [EpisodiosController::class, 'index']);
+Route::prefix('/v1/episodio')->group(function () {
+    Route::post('/', [EpisodiosController::class, 'store']);
+    Route::get('/{id}', [EpisodiosController::class, 'show']);
+    Route::put('/{id}', [EpisodiosController::class, 'update']);
+    Route::delete('/{id}', [EpisodiosController::class, 'destroy']);
 });

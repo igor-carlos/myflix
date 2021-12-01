@@ -20,7 +20,7 @@ class CreateSeriesTable extends Migration
                 'status',
                 ['assistido', 'não-assistido']
             )->default('não-assistido');
-
+            $table->string("last_episode_watched")->nullable()->default(null);
             $table->timestamps();
         });
     }
