@@ -880,12 +880,33 @@ export default {
       this.epEditId = this.episodioHandle.epProps.id;
       this.epEditTempId = this.episodioHandle.tempId;
       this.epEditNumero = this.episodioHandle.epProps.numero;
-      this.epEditNome = this.episodioHandle.epProps.nom;
+      this.epEditNome = this.episodioHandle.epProps.nome;
     },
     confirmEditEp() {
-      // falta fazer aq
-      console.log("oi");
-      this.editTempEp = "cad";
+      axios
+        .put(`api/v1/episodio/${this.epEditId}`, {
+          temporada_id: this.epEditTempId,
+          numero: this.epEditNumero,
+          nome: this.epEditNome,
+        })
+        .then((response) => {
+          this.editTempEp = "cad";
+          this.episodioHandle = null;
+          this.showModalEditSerieEpisodeo = false;
+          if (response.status == 200) {
+            notify({
+              text: "Edição realizada com sucesso !",
+              theme: "green",
+            });
+            this.$emit("reloadlist");
+          }
+        })
+        .catch((error) => {
+          notify({
+            text: error,
+            theme: "red",
+          });
+        });
     },
     lastEpisodeWhatched() {
       if (!this.lastEpisodioHandle) {

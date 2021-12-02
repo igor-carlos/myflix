@@ -71,8 +71,8 @@ class EpisodiosController extends Controller
         }
 
         $request->validate([
-            'nome' => 'string',
-            'numero' => 'integer'
+            'numero' => 'min:1',
+            'nome' => 'min:1'
         ]);
 
         $ep = Episodio::find($id);
@@ -81,12 +81,24 @@ class EpisodiosController extends Controller
             return response('No content', 204);
         }
 
+
+        if ($ep->numero != $request['numero'] || $ep->temporada_id != $request['temporada_id']) {
+            $epConsult = Episodio::where('temporada_id', '=', $request['temporada_id'])->where('numero', '=', $request['numero'])->get();
+            if (count($epConsult) > 0) {
+                return response("Episode already exists this season", 409);
+            }
+        }
+
         if (isset($request['nome'])) {
             $ep->nome = $request['nome'];
         }
 
         if (isset($request['numero'])) {
             $ep->numero = $request['numero'];
+        }
+
+        if (isset($request['temporada_id'])) {
+            $ep->temporada_id = $request['temporada_id'];
         }
 
         $ep->save();
