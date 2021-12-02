@@ -30,8 +30,8 @@ class TemporadasController extends Controller
     $request->validate(['serie_id' => 'required']);
     $request->validate(['numero' => 'required']);
     $request->validate(['nome' => 'required']);
-    $episodio = Temporada::where('serie_id', '=', $request['serie_id'])->where('numero', '=', $request['numero'])->get();
-    if (count($episodio) > 0) {
+    $temporada = Temporada::where('serie_id', '=', $request['serie_id'])->where('numero', '=', $request['numero'])->get();
+    if (count($temporada) > 0) {
       return response("Temporada already exists", 409);
     }
     $temporadaCadastrada = Temporada::create($request->all());
@@ -62,9 +62,9 @@ class TemporadasController extends Controller
    * @param  int  $id
    * @return \Illuminate\Http\Response
    */
-  public function updateBySerie(Request $request, $serieId): Response
+  public function update(Request $request, $id): Response
   {
-    $id = filter_var($serieId, FILTER_VALIDATE_INT);
+    $id = filter_var($id, FILTER_VALIDATE_INT);
     if ($id === false) {
       return response("Not found", 404);
     }
@@ -74,10 +74,17 @@ class TemporadasController extends Controller
       'nome' => 'min:1'
     ]);
 
-    $temporada =  Temporada::where('serie_id', '=', $id)->firstOrFail();
+    $temporada = Temporada::find($id);
 
     if ($temporada == null) {
       return response('No content', 204);
+    }
+
+    if ($temporada->numero != $request['numero']) {
+      $temporadaConsult = Temporada::where('serie_id', '=', $temporada->serie_id)->where('numero', '=', $request['numero'])->get();
+      if (count($temporadaConsult) > 0) {
+        return response("Temporada already exists", 409);
+      }
     }
 
     if (isset($request['numero'])) {

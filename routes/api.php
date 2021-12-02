@@ -35,7 +35,7 @@ Route::get('/v1/temporadas', [TemporadasController::class, 'index']);
 Route::prefix('/v1/temporada')->group(function () {
     Route::post('/', [TemporadasController::class, 'store']);
     Route::get('/{id}', [TemporadasController::class, 'showBySerie']);
-    Route::put('/{id}', [TemporadasController::class, 'updateBySerie']);
+    Route::put('/{id}', [TemporadasController::class, 'update']);
     Route::delete('/{id}', [TemporadasController::class, 'destroy']);
 });
 
